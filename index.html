@@ -50,6 +50,7 @@
   .nav-links a{font-family:var(--font-mono);font-size:11.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink);opacity:.72;transition:opacity .15s,color .15s;}
   .nav-links a:hover{opacity:1;color:var(--coral-deep);}
   .acct-chip{display:flex;align-items:center;gap:9px;border:1px solid var(--line);border-radius:999px;padding:5px 14px 5px 5px;font-family:var(--font-mono);font-size:12px;color:var(--ink);background:var(--cream);cursor:pointer;transition:border-color .15s;}
+  button.acct-chip{padding:8px 16px;}
   .acct-chip:hover{border-color:var(--terracotta);}
   .acct-av{width:28px;height:28px;border-radius:50%;background:var(--sun);display:flex;align-items:center;justify-content:center;font-family:var(--font-display);font-size:13px;color:var(--ink-deep);}
 
@@ -129,6 +130,17 @@
   .index-arrow{font-family:var(--font-display);font-size:22px;color:var(--line);transition:color .15s,transform .15s;}
   .index-row:hover .index-arrow{color:var(--terracotta);transform:translateX(5px);}
 
+  /* ---------- LOGIN MODAL ---------- */
+  .modal-overlay{position:fixed;inset:0;z-index:100;background:rgba(36,31,19,.6);display:flex;align-items:center;justify-content:center;padding:24px;}
+  .modal-overlay[hidden]{display:none;}
+  .modal-card{background:var(--cream);border:2px solid var(--ink-deep);border-radius:var(--radius);padding:32px;max-width:380px;width:100%;position:relative;box-shadow:6px 6px 0 var(--terracotta);}
+  .modal-close{position:absolute;top:14px;right:14px;background:var(--ink-deep);color:var(--cream);border:none;border-radius:50%;width:28px;height:28px;cursor:pointer;font-size:13px;}
+  #loginForm{display:flex;flex-direction:column;gap:14px;margin-top:20px;}
+  #loginForm label{display:flex;flex-direction:column;gap:6px;font-family:var(--font-mono);font-size:10.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--ink);opacity:.7;}
+  #loginForm input{font-family:var(--font-body);font-size:14.5px;font-weight:600;color:var(--ink);padding:11px 13px;border:2px solid var(--ink-deep);border-radius:var(--radius-sm);background:var(--cream);}
+  #loginForm input:focus{outline:3px solid var(--sun);outline-offset:1px;}
+  .modal-error{background:var(--terracotta);color:var(--cream);font-size:12.5px;font-weight:700;padding:9px 12px;border-radius:var(--radius-sm);}
+
   /* ---------- FOOTER ---------- */
   footer{border-top:1px solid var(--line);padding:26px 0;text-align:center;}
   footer .wrap{display:flex;justify-content:center;gap:24px;flex-wrap:wrap;font-family:var(--font-mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink);opacity:.6;}
@@ -165,9 +177,24 @@
       <li><a href="#">Kalender</a></li>
       <li><a href="#">Profil</a></li>
     </ul>
-    <div class="acct-chip"><span class="acct-av">M</span>Markus</div>
+    <button class="acct-chip" id="authBtn">Login</button>
   </nav>
 </header>
+
+<div id="loginOverlay" class="modal-overlay" hidden>
+  <div class="modal-card">
+    <button id="loginClose" class="modal-close" aria-label="Schließen">✕</button>
+    <p class="hero-kicker" style="margin-bottom:10px;">// login</p>
+    <h2 style="font-size:26px;">Rein in die Community</h2>
+    <p style="font-size:13px;line-height:1.6;color:var(--ink);opacity:.8;margin-top:8px;">Login mit deinem bestehenden Profil — gleiche Datenbank wie onlymakkus.de.</p>
+    <form id="loginForm">
+      <label>Name<input type="text" id="loginName" autocomplete="username" required></label>
+      <label>Passwort<input type="password" id="loginPassword" autocomplete="current-password" required></label>
+      <div id="loginError" class="modal-error" hidden></div>
+      <button type="submit" class="btn btn-primary" id="loginSubmit" style="width:100%;justify-content:center;">Einloggen</button>
+    </form>
+  </div>
+</div>
 
 <div class="wrap">
   <div class="sheet-top">
@@ -194,7 +221,7 @@
     <p class="hero-kicker">// sonne raus, ausreden rein — quatsch, umgekehrt.</p>
     <h1>JOY<span class="hl">FORCE</span></h1>
     <p class="hero-sub">Challenges, Ranking, Saisonplan — mit den Leuten, mit denen Training tatsächlich Spaß macht.</p>
-    <div class="hero-quip"><b>Diesen Monat:</b> 30 Tage Plank. Lena führt gerade — noch 8 Tage, um sie einzuholen.</div>
+    <div class="hero-quip" id="heroQuip"><b>Lädt …</b></div>
     <div class="hero-actions">
       <a href="#" class="btn btn-primary">Jetzt mitmachen</a>
       <a href="#" class="btn btn-ghost">Ranking ansehen</a>
@@ -215,31 +242,17 @@
 <div class="wrap">
   <div class="board">
     <div class="board-head">
-      <span class="board-head-l">Läuft gerade — <b>30 Tage Plank</b></span>
+      <span class="board-head-l">Läuft gerade — <b id="boardChallengeName">…</b></span>
       <span class="board-live">LIVE</span>
     </div>
     <div class="board-stats">
-      <div class="board-stat"><div class="board-stat-l">Teilnehmer</div><div class="board-stat-v">112</div></div>
-      <div class="board-stat"><div class="board-stat-l">Führt gerade</div><div class="board-stat-v">Lena</div></div>
+      <div class="board-stat"><div class="board-stat-l">Teilnehmer</div><div class="board-stat-v" id="boardCount">–</div></div>
+      <div class="board-stat"><div class="board-stat-l">Führt gerade</div><div class="board-stat-v" id="boardLeader">–</div></div>
     </div>
-    <div class="board-list">
-      <div class="board-row lead">
-        <span class="board-row-pos">01</span>
-        <div><div class="board-row-name">Lena M.</div><div class="board-row-bar"><span style="width:92%"></span></div></div>
-        <span class="board-row-val">5:42 min</span>
-      </div>
-      <div class="board-row">
-        <span class="board-row-pos">02</span>
-        <div><div class="board-row-name">Jonas K.</div><div class="board-row-bar"><span style="width:80%"></span></div></div>
-        <span class="board-row-val">5:10 min</span>
-      </div>
-      <div class="board-row">
-        <span class="board-row-pos">03</span>
-        <div><div class="board-row-name">Sina R.</div><div class="board-row-bar"><span style="width:64%"></span></div></div>
-        <span class="board-row-val">4:20 min</span>
-      </div>
+    <div class="board-list" id="boardList">
+      <div class="board-row"><span class="board-row-pos">–</span><div><div class="board-row-name">Lädt …</div></div></div>
     </div>
-    <a href="#" class="board-cta"><span>Deinen Wert eintragen</span><span class="arr">→</span></a>
+    <button class="board-cta" id="boardCta"><span id="boardCtaLabel">Deinen Wert eintragen</span><span class="arr">→</span></button>
   </div>
 </div>
 
@@ -290,5 +303,179 @@
   </div>
 </footer>
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bcryptjs/2.4.3/bcrypt.min.js"></script>
+<script>
+  /* ---------- SUPABASE: echte onlymakkus/Joyforce-Tabellen ---------- */
+  const SB_URL = 'https://bsubsesbcxdaqofmkiqg.supabase.co';
+  const SB_KEY = 'sb_publishable_fA2Dca6SVp0eB8k_WuqLrw_zplTnXBU';
+  const SESSION_KEY = 'om_profile_session';
+  const SEASON = new Date().getFullYear();
+
+  async function sbFetch(path, opts = {}) {
+    const r = await fetch(SB_URL + path, {
+      ...opts,
+      headers: {
+        'apikey': SB_KEY,
+        'Authorization': 'Bearer ' + SB_KEY,
+        'Content-Type': 'application/json',
+        ...(opts.method && opts.method !== 'GET' ? { 'Prefer': 'return=representation' } : {}),
+        ...opts.headers,
+      },
+    });
+    if (!r.ok) { const t = await r.text().catch(() => ''); throw new Error(`Supabase ${r.status}: ${t}`); }
+    if (r.status === 204) return null;
+    return r.json();
+  }
+
+  function getSession() { try { const raw = localStorage.getItem(SESSION_KEY); return raw ? JSON.parse(raw) : null; } catch { return null; } }
+  function displayNameFor(s) { if (!s) return ''; if (s.displayName) return s.displayName; return s.discriminator ? `${s.name}#${s.discriminator}` : s.name; }
+  function slugify(name) { return String(name || '').toLowerCase().replace(/[^a-z0-9]+/g, '').trim(); }
+
+  /* ---------- AUTH UI ---------- */
+  function renderAuthUI() {
+    const session = getSession();
+    const btn = document.getElementById('authBtn');
+    if (session) {
+      const name = displayNameFor(session);
+      btn.innerHTML = `<span class="acct-av" id="acctAv">${name.charAt(0).toUpperCase()}</span>${name}`;
+      const av = document.getElementById('acctAv');
+      if (session.avatarUrl) { av.style.backgroundImage = `url(${session.avatarUrl})`; av.style.backgroundSize = 'cover'; av.textContent = ''; }
+      btn.onclick = handleLogoutClick;
+    } else {
+      btn.textContent = 'Login';
+      btn.onclick = openLoginModal;
+    }
+  }
+  function handleLogoutClick() { localStorage.removeItem(SESSION_KEY); renderAuthUI(); loadBoard(); }
+
+  const overlay = document.getElementById('loginOverlay');
+  const loginForm = document.getElementById('loginForm');
+  const loginError = document.getElementById('loginError');
+  const loginSubmit = document.getElementById('loginSubmit');
+  function openLoginModal() { overlay.hidden = false; loginError.hidden = true; document.getElementById('loginName').focus(); }
+  function closeLoginModal() { overlay.hidden = true; }
+  document.getElementById('loginClose').addEventListener('click', closeLoginModal);
+  overlay.addEventListener('click', (e) => { if (e.target === overlay) closeLoginModal(); });
+
+  loginForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    loginError.hidden = true;
+    const name = document.getElementById('loginName').value.trim();
+    const password = document.getElementById('loginPassword').value;
+    loginSubmit.disabled = true; loginSubmit.textContent = 'Prüfe …';
+    try {
+      let filter;
+      if (name.includes('#')) {
+        const [n, d] = name.split('#');
+        filter = `name=eq.${encodeURIComponent(n.trim())}&discriminator=eq.${encodeURIComponent(d.trim())}`;
+      } else {
+        filter = `name=eq.${encodeURIComponent(name)}`;
+      }
+      const rows = await sbFetch(`/rest/v1/profiles?${filter}&select=*`);
+      if (!rows || !rows.length) throw new Error('Kein Profil gefunden. Bei doppelten Namen: Name#1234.');
+      const profile = rows[0];
+      const ok = dcodeIO.bcrypt.compareSync(password, profile.password_hash);
+      if (!ok) throw new Error('Passwort stimmt nicht.');
+      const session = { id: profile.id, name: profile.name, discriminator: profile.discriminator, displayName: profile.display_name, avatarUrl: profile.avatar_url || null };
+      localStorage.setItem(SESSION_KEY, JSON.stringify(session));
+      closeLoginModal();
+      renderAuthUI();
+      loadBoard();
+    } catch (err) {
+      loginError.textContent = err.message || 'Login fehlgeschlagen.';
+      loginError.hidden = false;
+    } finally {
+      loginSubmit.disabled = false; loginSubmit.textContent = 'Einloggen';
+    }
+  });
+
+  /* ---------- LIVE BOARD (season_months + exercises + challenge_entries) ---------- */
+  let ACTIVE_MONTH = null;
+
+  async function loadBoard() {
+    try {
+      const now = new Date(), y = now.getFullYear(), m = now.getMonth() + 1;
+      const rows = await sbFetch(`/rest/v1/season_months?season_year=eq.${y}&month=eq.${m}&select=*,exercises(*)`);
+      const row = rows && rows[0];
+      if (!row || row.is_december_vote || !row.exercises) {
+        document.getElementById('boardChallengeName').textContent = row && row.is_december_vote ? 'Dezember-Voting' : 'Keine Challenge';
+        document.getElementById('heroQuip').innerHTML = `<b>Gerade Pause:</b> Für diesen Monat läuft keine Challenge.`;
+        return;
+      }
+      const ex = row.exercises;
+      const goal = row.custom_goal || ex.default_goal || 60;
+      const unit = ex.default_unit || '';
+      ACTIVE_MONTH = { monthId: row.id, challengeSlug: slugify(ex.name), goal, unit, name: ex.name };
+
+      document.getElementById('boardChallengeName').textContent = ex.name;
+
+      const entries = (await sbFetch(`/rest/v1/challenge_entries?season_month_id=eq.${row.id}&select=*`)) || [];
+      document.getElementById('boardCount').textContent = entries.length;
+
+      const capped = e => Math.min(e.value1 || 0, goal);
+      const ts = e => { const t = e.last_progress_ts ? Date.parse(e.last_progress_ts) : NaN; return Number.isNaN(t) ? Infinity : t; };
+      entries.sort((a, b) => capped(b) - capped(a) || ts(a) - ts(b) || a.id - b.id);
+
+      document.getElementById('boardLeader').textContent = entries.length ? entries[0].name : '–';
+
+      const daysLeft = Math.max(0, Math.ceil((new Date(y, m, 0) - now) / 86400000));
+      document.getElementById('heroQuip').innerHTML = entries.length
+        ? `<b>Diesen Monat:</b> ${ex.name}. ${entries[0].name} führt gerade — noch ${daysLeft} Tage${entries.length > 1 ? ', um sie einzuholen' : ''}.`
+        : `<b>Diesen Monat:</b> ${ex.name}. Noch keiner dabei — mach den Anfang.`;
+
+      if (entries.length) {
+        const list = document.getElementById('boardList');
+        list.innerHTML = entries.slice(0, 3).map((en, i) => {
+          const pct = Math.round((capped(en) / goal) * 100);
+          return `
+            <div class="board-row${i === 0 ? ' lead' : ''}">
+              <span class="board-row-pos">0${i + 1}</span>
+              <div><div class="board-row-name">${en.name}</div><div class="board-row-bar"><span style="width:${pct}%"></span></div></div>
+              <span class="board-row-val">${en.value1 || 0} ${unit}</span>
+            </div>`;
+        }).join('');
+      }
+
+      document.getElementById('boardCtaLabel').textContent = `Wert eintragen (${unit})`;
+    } catch (err) {
+      console.warn('Board konnte nicht geladen werden:', err.message);
+    }
+  }
+
+  document.getElementById('boardCta').addEventListener('click', async () => {
+    const session = getSession();
+    if (!session) { openLoginModal(); return; }
+    if (!ACTIVE_MONTH) { alert('Für diesen Monat läuft keine Challenge.'); return; }
+    const raw = window.prompt(`${ACTIVE_MONTH.name}\nWert hinzufügen (${ACTIVE_MONTH.unit}):`);
+    if (raw === null || raw.trim() === '') return;
+    const v1 = Math.max(0, parseInt(raw, 10) || 0);
+    if (!v1) { alert('Bitte eine Zahl größer 0 eingeben.'); return; }
+    try {
+      const existing = await sbFetch(`/rest/v1/challenge_entries?challenge=eq.${ACTIVE_MONTH.challengeSlug}&profile_id=eq.${session.id}&select=*`);
+      if (existing && existing.length) {
+        const prev = existing[0];
+        await sbFetch(`/rest/v1/challenge_entries?id=eq.${prev.id}`, {
+          method: 'PATCH', headers: { 'Prefer': 'return=minimal' },
+          body: JSON.stringify({ value1: (prev.value1 || 0) + v1, last_progress_ts: new Date().toISOString() }),
+        });
+      } else {
+        await sbFetch('/rest/v1/challenge_entries', {
+          method: 'POST', headers: { 'Prefer': 'return=representation' },
+          body: JSON.stringify({
+            challenge: ACTIVE_MONTH.challengeSlug, season_month_id: ACTIVE_MONTH.monthId,
+            profile_id: session.id, name: session.name, value1: v1, last_progress_ts: new Date().toISOString(),
+          }),
+        });
+      }
+      try { await sbFetch('/rest/v1/rpc/log_active_day', { method: 'POST', headers: { 'Prefer': 'return=minimal' }, body: JSON.stringify({ p_profile_id: session.id }) }); } catch (e) {}
+      loadBoard();
+    } catch (err) {
+      alert('Eintragen hat nicht geklappt: ' + err.message);
+    }
+  });
+
+  renderAuthUI();
+  loadBoard();
+</script>
 </body>
 </html>
