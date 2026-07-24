@@ -1,0 +1,926 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>JOYFORCE — Stärke verbindet.</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Archivo:ital,wght@0,500;0,600;0,700;0,800;0,900;1,700&family=IBM+Plex+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --cream:#F5EFE1;
+    --sand:#EBDFC0;
+    --ink:#2B331E;
+    --ink-2:#374025;
+    --olive:#4B5A3A;
+    --olive-dark:#333F27;
+    --sun:#F2A94E;
+    --sun-soft:#F6C57C;
+    --terracotta:#E2733A;
+    --coral-deep:#C85A2B;
+    --line: rgba(24,28,17,.16);
+
+    --font-display:'Anton', sans-serif;
+    --font-body:'Archivo', sans-serif;
+    --font-mono:'IBM Plex Mono', monospace;
+
+    --wrap: 1200px;
+    --radius: 16px;
+    --radius-sm: 10px;
+    --shadow: 7px 7px 0 var(--ink);
+    --shadow-sm: 5px 5px 0 var(--ink);
+  }
+
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  @media (prefers-reduced-motion: reduce){ *{animation-duration:.001ms !important; animation-iteration-count:1 !important; scroll-behavior:auto !important;} }
+  body{
+    margin:0;
+    background:var(--cream);
+    color:var(--ink);
+    font-family:var(--font-body);
+    font-weight:600;
+    -webkit-font-smoothing:antialiased;
+    overflow-x:hidden;
+  }
+  img,svg{display:block;max-width:100%;}
+  a{color:inherit;text-decoration:none;}
+  ul{list-style:none;margin:0;padding:0;}
+  h1,h2,h3{font-family:var(--font-display);font-weight:400;margin:0;text-transform:uppercase;letter-spacing:.01em;line-height:.92;}
+  p{margin:0;}
+  .wrap{max-width:var(--wrap);margin:0 auto;padding:0 32px;}
+  .eyebrow{
+    font-family:var(--font-mono);
+    font-size:12.5px;
+    letter-spacing:.16em;
+    text-transform:uppercase;
+    color:var(--terracotta);
+    display:flex;align-items:center;gap:10px;
+    font-weight:700;
+  }
+  .eyebrow::before{
+    content:"";
+    width:26px;height:3px;
+    background:var(--terracotta);
+    display:inline-block;
+  }
+  .btn{
+    font-family:var(--font-body);
+    font-weight:800;
+    font-size:15px;
+    text-transform:uppercase;
+    letter-spacing:.02em;
+    padding:16px 28px;
+    border-radius:10px;
+    border:3px solid var(--ink);
+    cursor:pointer;
+    display:inline-flex;
+    align-items:center;
+    gap:8px;
+    transition:transform .15s ease, box-shadow .15s ease, background .15s ease, color .15s ease;
+  }
+  .btn-primary{
+    background:var(--terracotta);
+    color:var(--cream);
+    box-shadow:var(--shadow-sm);
+  }
+  .btn-primary:hover{transform:translate(-3px,-3px);box-shadow:8px 8px 0 var(--ink);}
+  .btn-primary:active{transform:translate(2px,2px);box-shadow:2px 2px 0 var(--ink);}
+  .btn-ghost{
+    background:var(--cream);
+    color:var(--ink);
+    box-shadow:var(--shadow-sm);
+  }
+  .btn-ghost:hover{transform:translate(-3px,-3px);box-shadow:8px 8px 0 var(--ink);background:var(--sun);}
+  .btn-ghost:active{transform:translate(2px,2px);box-shadow:2px 2px 0 var(--ink);}
+  .btn-small{padding:11px 18px;font-size:12.5px;border-width:2px;box-shadow:4px 4px 0 var(--ink);}
+  .btn-small:hover{box-shadow:6px 6px 0 var(--ink);}
+  .btn-invert{border-color:var(--cream);background:var(--ink);color:var(--cream);box-shadow:5px 5px 0 var(--terracotta);}
+  .btn-invert:hover{box-shadow:8px 8px 0 var(--terracotta);}
+
+  /* ---------- NAV ---------- */
+  header{
+    position:sticky;top:0;z-index:50;
+    background:var(--ink);
+    border-bottom:3px solid var(--terracotta);
+  }
+  nav.wrap{
+    display:flex;align-items:center;justify-content:space-between;
+    padding-top:14px;padding-bottom:14px;
+  }
+  .brand{display:flex;align-items:center;gap:10px;}
+  .brand-mark{width:36px;height:36px;flex:none;}
+  .brand-word{
+    font-family:var(--font-display);
+    font-size:22px;color:var(--cream);
+    letter-spacing:.02em;text-transform:uppercase;
+  }
+  .nav-links{display:flex;align-items:center;gap:30px;}
+  .nav-links a{
+    font-family:var(--font-mono);
+    font-size:12.5px;font-weight:600;color:var(--sand);
+    letter-spacing:.06em;text-transform:uppercase;
+    position:relative;padding:4px 0;
+  }
+  .nav-links a::after{
+    content:"";position:absolute;left:0;bottom:-3px;height:2px;width:0;
+    background:var(--terracotta);transition:width .2s ease;
+  }
+  .nav-links a:hover::after{width:100%;}
+  .nav-links a:hover{color:var(--cream);}
+  .nav-cta{display:flex;align-items:center;gap:18px;}
+  .burger{display:none;flex-direction:column;gap:5px;background:none;border:none;cursor:pointer;padding:6px;}
+  .burger span{width:24px;height:2px;background:var(--cream);border-radius:1px;}
+
+  /* ---------- HERO ---------- */
+  .hero{position:relative;overflow:hidden;padding-top:60px;background:var(--cream);}
+  .hero-noise{
+    position:absolute;inset:0;z-index:0;opacity:.05;pointer-events:none;
+    background-image:radial-gradient(var(--ink) 1px, transparent 1px);
+    background-size:5px 5px;
+  }
+  .hero-bg{
+    position:absolute;inset:0;z-index:0;
+    display:flex;justify-content:flex-end;align-items:flex-end;
+    opacity:.95;pointer-events:none;
+  }
+  .hero-inner{
+    position:relative;z-index:2;
+    padding-bottom:64px;
+  }
+  .hero-top{display:flex;justify-content:space-between;align-items:flex-start;gap:24px;flex-wrap:wrap;}
+  .hero h1{
+    font-size:clamp(58px, 10vw, 138px);
+    margin-top:20px;
+  }
+  .hero h1 .line2{
+    display:inline-block;background:var(--terracotta);color:var(--cream);
+    padding:0 14px 6px;margin-top:6px;transform:rotate(-1deg);
+  }
+  .badge-spin-wrap{width:150px;height:150px;flex:none;position:relative;margin-top:10px;}
+  .badge-spin-wrap svg{width:100%;height:100%;animation:spin 22s linear infinite;}
+  @keyframes spin{to{transform:rotate(360deg);}}
+  .badge-center{
+    position:absolute;inset:0;display:flex;flex-direction:column;
+    align-items:center;justify-content:center;pointer-events:none;
+  }
+  .badge-center b{font-family:var(--font-display);font-size:30px;color:var(--cream);}
+  .badge-center small{font-family:var(--font-mono);font-size:8px;color:var(--sun-soft);letter-spacing:.05em;}
+
+  .hero-sub{
+    margin-top:26px;
+    font-size:18px;line-height:1.55;
+    max-width:560px;
+    color:var(--ink-2);
+    font-weight:600;
+  }
+  .hero-actions{display:flex;gap:16px;margin-top:32px;flex-wrap:wrap;}
+
+  .scoreboard{
+    display:flex;gap:0;margin-top:56px;
+    background:var(--ink);
+    border:3px solid var(--ink);
+  }
+  .score{
+    flex:1;padding:22px 26px;border-right:1px solid rgba(245,239,225,.18);
+  }
+  .score:last-child{border-right:none;}
+  .score b{display:block;font-family:var(--font-display);font-size:38px;color:var(--sun);letter-spacing:.01em;}
+  .score span{font-family:var(--font-mono);font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--sand);}
+
+  /* ---------- TICKER ---------- */
+  .ticker{
+    background:var(--terracotta);
+    color:var(--ink);
+    overflow:hidden;white-space:nowrap;
+    padding:22px 0;
+    border-top:3px solid var(--ink);
+    border-bottom:3px solid var(--ink);
+    transform:skewY(-2deg);
+    transform-origin:center;
+    margin:18px 0;
+  }
+  .ticker-track{display:inline-block;animation:scroll-left 24s linear infinite;}
+  .ticker-track span{
+    font-family:var(--font-display);font-size:20px;letter-spacing:.02em;
+    text-transform:uppercase;margin:0 26px;
+    display:inline-block;
+  }
+  @keyframes scroll-left{
+    from{transform:translateX(0);}
+    to{transform:translateX(-50%);}
+  }
+
+  /* ---------- SECTIONS shared ---------- */
+  section{padding:100px 0;}
+  section.on-ink{
+    background:var(--ink);
+    background-image:radial-gradient(circle at 12% 0%, rgba(242,169,78,.14), transparent 45%), radial-gradient(circle at 90% 90%, rgba(226,115,58,.12), transparent 50%);
+    color:var(--cream);
+  }
+  .sec-head{
+    display:flex;justify-content:space-between;align-items:flex-end;
+    gap:24px;margin-bottom:50px;flex-wrap:wrap;
+  }
+  .sec-head h2{font-size:clamp(34px,4.6vw,54px);margin-top:12px;}
+  .sec-head p{max-width:400px;font-size:14.5px;line-height:1.6;font-weight:600;opacity:.85;}
+
+  .reveal{opacity:0;transform:translateY(24px);transition:opacity .55s ease, transform .55s ease;}
+  .reveal.is-visible{opacity:1;transform:translateY(0);}
+
+  /* ---------- RING ---------- */
+  .ring-wrap{position:relative;width:126px;height:126px;flex:none;}
+  .ring-wrap svg{width:100%;height:100%;transform:rotate(-90deg);}
+  .ring-track{fill:none;stroke:rgba(245,239,225,.15);stroke-width:10;}
+  .ring-fill{fill:none;stroke:var(--sun);stroke-width:10;stroke-linecap:butt;transition:stroke-dashoffset 1.1s cubic-bezier(.4,0,.2,1);}
+  .ring-center{
+    position:absolute;inset:0;display:flex;flex-direction:column;
+    align-items:center;justify-content:center;
+  }
+  .ring-center b{font-family:var(--font-display);font-size:26px;color:var(--cream);}
+  .ring-center small{font-family:var(--font-mono);font-size:9px;color:var(--sun-soft);letter-spacing:.06em;}
+
+  /* ---------- WEEKLY CHALLENGE ---------- */
+  .weekly-card{
+    background:var(--ink-2);
+    background-image:radial-gradient(circle at 88% 8%, rgba(242,169,78,.18), transparent 55%);
+    border:3px solid var(--terracotta);
+    border-radius:var(--radius);
+    padding:52px;
+    display:grid;
+    grid-template-columns:1fr auto;
+    gap:40px;
+    align-items:center;
+  }
+  .weekly-card .eyebrow{color:var(--sun-soft);}
+  .weekly-card .eyebrow::before{background:var(--sun-soft);}
+  .weekly-card h3{font-size:42px;color:var(--cream);margin-top:16px;max-width:480px;}
+  .weekly-meta{display:flex;gap:0;margin-top:28px;flex-wrap:wrap;border-top:2px solid rgba(245,239,225,.15);}
+  .weekly-meta div{font-family:var(--font-mono);font-size:11.5px;color:var(--sun-soft);padding:16px 26px 0 0;}
+  .weekly-meta b{display:block;font-size:22px;color:var(--cream);font-family:var(--font-display);}
+  .avatar-stack{display:flex;margin-top:26px;}
+  .avatar-stack span{
+    width:36px;height:36px;
+    border-radius:50%;
+    border:2px solid var(--ink-2);
+    margin-left:-10px;
+    display:flex;align-items:center;justify-content:center;
+    font-family:var(--font-mono);font-size:11px;font-weight:700;
+    color:var(--ink);
+  }
+  .avatar-stack span:first-child{margin-left:0;}
+  .weekly-actions{margin-top:30px;}
+
+  /* ---------- MONTHLY CHALLENGE ---------- */
+  .monthly-grid{
+    display:grid;grid-template-columns:1.1fr .9fr;gap:32px;
+  }
+  .monthly-card{
+    background:var(--cream);
+    border:3px solid var(--ink);
+    border-radius:var(--radius);
+    box-shadow:var(--shadow);
+    padding:46px;
+  }
+  .monthly-card h3{font-size:38px;color:var(--ink);margin-top:14px;}
+  .monthly-desc{margin-top:16px;color:var(--ink-2);font-size:15px;line-height:1.6;max-width:440px;font-weight:600;}
+  .monthly-stats{display:flex;gap:0;margin-top:32px;border-top:2px solid var(--line);}
+  .monthly-stats div{padding:16px 30px 0 0;}
+  .monthly-stats div b{display:block;font-family:var(--font-display);font-size:32px;color:var(--terracotta);}
+  .monthly-stats div small{font-family:var(--font-mono);font-size:10.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--olive);}
+  .monthly-actions{margin-top:34px;}
+
+  .podium-card{
+    background:var(--olive);
+    border:3px solid var(--ink);
+    border-radius:var(--radius);
+    box-shadow:var(--shadow);
+    padding:38px;
+    color:var(--cream);
+    display:flex;flex-direction:column;
+  }
+  .podium-card .eyebrow{color:var(--sun-soft);}
+  .podium-card .eyebrow::before{background:var(--sun-soft);}
+  .podium-title{font-size:24px;font-family:var(--font-display);margin-top:14px;color:var(--cream);}
+  .podium-list{margin-top:26px;display:flex;flex-direction:column;gap:12px;flex:1;}
+  .podium-row{
+    display:flex;align-items:center;gap:14px;
+    background:rgba(245,239,225,.08);
+    border-radius:var(--radius-sm);
+    padding:12px 16px;border:1px solid rgba(245,239,225,.2);
+  }
+  .podium-rank{
+    font-family:var(--font-display);font-size:17px;
+    width:32px;height:32px;
+    border-radius:50%;
+    display:flex;align-items:center;justify-content:center;
+    background:var(--terracotta);color:var(--ink);flex:none;
+  }
+  .podium-row:nth-child(2) .podium-rank{background:var(--sun);}
+  .podium-row:nth-child(3) .podium-rank{background:rgba(245,239,225,.5);}
+  .podium-name{font-weight:800;font-size:14.5px;flex:1;}
+  .podium-pts{font-family:var(--font-mono);font-size:12.5px;color:var(--sun-soft);}
+  .podium-card .btn{margin-top:24px;align-self:flex-start;}
+
+  /* ---------- HALL OF FAME (stamp cards) ---------- */
+  .hof-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:18px;}
+  .hof-card{
+    display:flex;flex-direction:column;align-items:center;text-align:center;gap:10px;
+    transition:transform .2s ease;
+  }
+  .hof-card:hover{transform:translateY(-6px);}
+  .hof-stamp{
+    width:96px;height:96px;border-radius:50%;
+    border:3px dashed var(--terracotta);
+    display:flex;flex-direction:column;align-items:center;justify-content:center;
+    background:var(--cream);
+  }
+  .hof-card:nth-child(even) .hof-stamp{transform:rotate(-6deg);}
+  .hof-card:nth-child(odd) .hof-stamp{transform:rotate(5deg);}
+  .hof-stamp svg{width:22px;height:22px;color:var(--terracotta);}
+  .hof-month{font-family:var(--font-mono);font-size:9.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--olive);margin-top:2px;}
+  .hof-name{font-weight:800;font-size:14px;color:var(--ink);}
+  .hof-note{font-size:11px;color:var(--ink-2);opacity:.75;font-weight:600;max-width:110px;}
+
+  .season-panel{
+    display:grid;grid-template-columns:1fr 1.3fr;gap:32px;margin-top:56px;
+  }
+  .season-blurb{
+    background:var(--terracotta);color:var(--ink);border:3px solid var(--ink);border-radius:var(--radius);padding:38px;
+  }
+  .season-blurb .eyebrow{color:var(--ink);}
+  .season-blurb .eyebrow::before{background:var(--ink);}
+  .season-blurb h3{font-size:28px;margin-top:14px;color:var(--ink);}
+  .season-blurb p{margin-top:14px;font-size:14.5px;line-height:1.6;color:var(--ink-2);font-weight:700;}
+  .season-progress{margin-top:26px;}
+  .bar-track{height:14px;background:rgba(24,28,17,.15);border:2px solid var(--ink);border-radius:100px;overflow:hidden;}
+  .bar-fill{height:100%;background:var(--ink);width:0%;transition:width 1.2s ease;}
+  .season-progress small{font-family:var(--font-mono);font-size:11px;color:var(--ink);display:block;margin-top:10px;font-weight:700;}
+
+  .rank-table{
+    background:var(--cream);border:3px solid var(--ink);border-radius:var(--radius);overflow:hidden;box-shadow:var(--shadow);
+  }
+  .rank-row{
+    display:grid;grid-template-columns:48px 1fr auto;align-items:center;
+    gap:14px;padding:16px 24px;border-bottom:2px solid var(--line);
+  }
+  .rank-row:last-child{border-bottom:none;}
+  .rank-row.head{
+    font-family:var(--font-mono);font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;
+    color:var(--olive);padding-top:14px;padding-bottom:14px;background:var(--sand);
+  }
+  .rank-num{font-family:var(--font-display);font-size:20px;color:var(--terracotta);}
+  .rank-row.head .rank-num{font-family:var(--font-mono);font-size:10.5px;color:var(--olive);}
+  .rank-name{font-weight:800;font-size:14.5px;color:var(--ink);}
+  .rank-sub{font-family:var(--font-mono);font-size:11px;color:var(--olive);}
+  .rank-pts{font-family:var(--font-mono);font-size:14px;font-weight:700;color:var(--ink-2);}
+
+  /* ---------- CALENDAR ---------- */
+  .cal-grid{
+    display:grid;grid-template-columns:repeat(4,1fr);gap:16px;
+  }
+  .cal-card{
+    background:var(--ink-2);border:2px solid rgba(245,239,225,.15);
+    border-radius:var(--radius-sm);
+    padding:20px;position:relative;color:var(--cream);
+  }
+  .cal-card.current{border-color:var(--terracotta);background:var(--terracotta);color:var(--ink);}
+  .cal-live{
+    position:absolute;top:14px;right:14px;
+    background:var(--ink);color:var(--sun);
+    border-radius:100px;
+    font-family:var(--font-mono);font-size:9px;letter-spacing:.08em;text-transform:uppercase;
+    padding:4px 10px;font-weight:700;
+  }
+  .cal-month-num{font-family:var(--font-mono);font-size:11px;color:var(--sun-soft);letter-spacing:.06em;}
+  .cal-card.current .cal-month-num{color:var(--ink);opacity:.7;}
+  .cal-month-name{font-family:var(--font-display);font-size:24px;margin-top:4px;}
+  .cal-tag{
+    display:inline-block;margin-top:12px;
+    background:var(--sun);color:var(--ink);
+    border-radius:100px;
+    font-family:var(--font-mono);font-size:10px;letter-spacing:.05em;text-transform:uppercase;
+    padding:5px 10px;font-weight:700;
+  }
+  .cal-card.current .cal-tag{background:var(--ink);color:var(--sun);}
+  .cal-focus{margin-top:12px;font-size:13px;line-height:1.5;opacity:.9;font-weight:600;}
+  .cal-status{margin-top:12px;font-family:var(--font-mono);font-size:9.5px;letter-spacing:.06em;text-transform:uppercase;opacity:.6;}
+
+  /* ---------- PROFILE TEASER ---------- */
+  .profile-section{
+    background:var(--cream);
+    border:3px solid var(--ink);
+    border-radius:var(--radius);
+    box-shadow:var(--shadow);
+    padding:64px;
+    display:grid;grid-template-columns:1fr 1fr;gap:48px;align-items:center;
+  }
+  .profile-section .eyebrow{color:var(--terracotta);}
+  .profile-section h2{color:var(--ink);margin-top:14px;font-size:clamp(32px,3.8vw,48px);}
+  .profile-section p{color:var(--ink-2);margin-top:16px;font-size:15px;line-height:1.65;max-width:420px;font-weight:600;}
+  .profile-mock{
+    background:var(--ink);
+    background-image:radial-gradient(circle at 90% 0%, rgba(242,169,78,.2), transparent 55%);
+    border:3px solid var(--ink);border-radius:var(--radius);padding:30px;color:var(--cream);
+  }
+  .profile-top{display:flex;align-items:center;gap:16px;}
+  .profile-avatar{
+    width:58px;height:58px;
+    border-radius:50%;
+    background:var(--terracotta);
+    border:2px solid var(--cream);
+    flex:none;
+  }
+  .profile-name{font-weight:800;font-size:17px;color:var(--cream);}
+  .profile-handle{font-family:var(--font-mono);font-size:12px;color:var(--sun-soft);}
+  .profile-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:2px;margin-top:24px;background:rgba(245,239,225,.15);}
+  .profile-stat{background:var(--ink);border-radius:var(--radius-sm);padding:14px 10px;text-align:center;}
+  .profile-stat b{display:block;font-family:var(--font-display);font-size:24px;color:var(--sun);}
+  .profile-stat small{font-family:var(--font-mono);font-size:9px;letter-spacing:.04em;text-transform:uppercase;color:var(--sand);}
+  .profile-badges{display:flex;gap:10px;margin-top:20px;}
+  .profile-badges span{
+    width:36px;height:36px;background:var(--terracotta);border-radius:50%;
+    display:flex;align-items:center;justify-content:center;color:var(--ink);
+  }
+  .profile-badges span svg{width:17px;height:17px;}
+  .profile-soon{
+    margin-top:20px;font-family:var(--font-mono);font-size:11px;color:var(--sun-soft);
+    border-top:1px dashed rgba(245,239,225,.3);padding-top:14px;
+  }
+
+  /* ---------- FOOTER ---------- */
+  footer{
+    padding:70px 0 40px;background:var(--ink);
+    background-image:radial-gradient(circle at 15% 0%, rgba(242,169,78,.12), transparent 45%);
+    color:var(--cream);
+  }
+  .footer-top{
+    display:flex;justify-content:space-between;align-items:flex-start;gap:40px;
+    padding-bottom:48px;border-bottom:2px solid rgba(245,239,225,.15);flex-wrap:wrap;
+  }
+  .footer-quote h3{font-size:clamp(30px,3.6vw,44px);color:var(--cream);max-width:560px;}
+  .footer-values{display:flex;flex-direction:column;gap:12px;}
+  .footer-values div{display:flex;align-items:center;gap:10px;font-size:13.5px;color:var(--sand);font-weight:700;text-transform:uppercase;font-family:var(--font-mono);letter-spacing:.03em;}
+  .footer-values svg{width:16px;height:16px;color:var(--terracotta);flex:none;}
+  .footer-bottom{
+    display:flex;justify-content:space-between;align-items:center;
+    padding-top:28px;flex-wrap:wrap;gap:16px;
+  }
+  .footer-brand{display:flex;align-items:center;gap:10px;}
+  .footer-brand svg{width:26px;height:26px;}
+  .footer-brand span{font-family:var(--font-display);font-size:17px;color:var(--cream);text-transform:uppercase;}
+  .footer-meta{font-family:var(--font-mono);font-size:12px;color:var(--sand);display:flex;gap:22px;flex-wrap:wrap;}
+  .footer-meta a:hover{color:var(--terracotta);}
+
+  /* ---------- RESPONSIVE ---------- */
+  @media (max-width:980px){
+    .nav-links{display:none;}
+    .burger{display:flex;}
+    .hero-top{flex-direction:column;}
+    .badge-spin-wrap{margin-top:24px;}
+    .scoreboard{flex-wrap:wrap;}
+    .score{flex:1 1 50%;border-bottom:1px solid rgba(245,239,225,.18);}
+    .weekly-card{grid-template-columns:1fr;text-align:center;}
+    .weekly-meta{justify-content:center;}
+    .avatar-stack{justify-content:center;}
+    .monthly-grid{grid-template-columns:1fr;}
+    .hof-grid{grid-template-columns:repeat(3,1fr);}
+    .season-panel{grid-template-columns:1fr;}
+    .cal-grid{grid-template-columns:repeat(2,1fr);}
+    .profile-section{grid-template-columns:1fr;padding:40px;}
+    .footer-top{flex-direction:column;}
+  }
+  @media (max-width:560px){
+    .wrap{padding:0 20px;}
+    section{padding:64px 0;}
+    .hof-grid{grid-template-columns:repeat(2,1fr);}
+    .cal-grid{grid-template-columns:1fr;}
+    .weekly-card, .monthly-card, .profile-section{padding:26px;}
+    .score{flex:1 1 100%;}
+  }
+</style>
+</head>
+<body>
+
+<!-- ============ NAV ============ -->
+<header id="siteHeader">
+  <nav class="wrap">
+    <div class="brand">
+      <svg class="brand-mark" viewBox="0 0 100 100" fill="none">
+        <circle cx="50" cy="50" r="47" fill="#181C11" stroke="#E2733A" stroke-width="5"/>
+        <circle cx="58" cy="46" r="16" fill="#F2A94E"/>
+        <path d="M18 60 Q50 46 82 60" stroke="#F5EFE1" stroke-width="7" fill="none" stroke-linecap="round"/>
+      </svg>
+      <span class="brand-word">JOYFORCE</span>
+    </div>
+    <ul class="nav-links">
+      <li><a href="#start">Start</a></li>
+      <li><a href="#challenges">Challenges</a></li>
+      <li><a href="#ranking">Ranking</a></li>
+      <li><a href="#kalender">Kalender</a></li>
+      <li><a href="#profil">Profil</a></li>
+    </ul>
+    <div class="nav-cta">
+      <a href="#challenges" class="btn btn-primary btn-small">Community beitreten</a>
+      <button class="burger" aria-label="Menü öffnen"><span></span><span></span><span></span></button>
+    </div>
+  </nav>
+</header>
+
+<!-- ============ HERO ============ -->
+<section class="hero" id="start">
+  <div class="hero-noise"></div>
+  <div class="hero-bg">
+    <svg width="600" height="460" viewBox="0 0 600 460" style="opacity:.5">
+      <circle cx="410" cy="150" r="115" fill="#F2A94E"/>
+      <g opacity=".9">
+        <rect x="150" y="185" width="420" height="7" fill="#F5EFE1"/>
+        <rect x="150" y="204" width="420" height="10" fill="#F5EFE1"/>
+        <rect x="150" y="226" width="420" height="13" fill="#F5EFE1"/>
+      </g>
+      <g fill="#4B5A3A">
+        <path d="M470 420 Q476 330 466 260 Q460 250 452 258 Q460 250 448 246 Q460 246 450 236 Q462 242 456 230 Q468 238 468 224 Q476 238 480 224 Q482 240 490 230 Q486 244 496 238 Q488 250 500 250 Q490 256 500 264 Q488 264 494 276 L470 270 Q464 338 476 420 Z"/>
+        <rect x="464" y="390" width="10" height="34" rx="2"/>
+        <path d="M540 420 Q544 360 538 316 Q534 310 528 315 Q534 310 526 306 Q534 306 528 299 Q536 303 532 295 Q540 300 540 291 Q545 300 548 291 Q550 301 555 295 Q552 304 559 300 Q554 308 561 308 Q555 312 561 317 Q553 317 557 325 L540 321 Q536 365 544 420 Z"/>
+        <rect x="536" y="402" width="8" height="22" rx="2"/>
+      </g>
+    </svg>
+  </div>
+  <div class="wrap hero-inner">
+    <div class="hero-top reveal is-visible">
+      <div>
+        <div class="eyebrow">Joyforce Community · Saison 2026</div>
+        <h1>STÄRKE<br><span class="line2">VERBINDET.</span></h1>
+      </div>
+      <div class="badge-spin-wrap">
+        <svg viewBox="0 0 200 200">
+          <defs>
+            <path id="circlePath" d="M100,100 m-82,0 a82,82 0 1,1 164,0 a82,82 0 1,1 -164,0"/>
+          </defs>
+          <circle cx="100" cy="100" r="80" fill="#181C11" stroke="#E2733A" stroke-width="4"/>
+          <text font-family="IBM Plex Mono, monospace" font-size="12.5" font-weight="700" fill="#F5EFE1" letter-spacing="3">
+            <textPath href="#circlePath" startOffset="0%">SAISON 2026 • JOYFORCE • STÄRKE VERBINDET • </textPath>
+          </text>
+        </svg>
+        <div class="badge-center"><b>26</b><small>SEASON</small></div>
+      </div>
+    </div>
+    <p class="hero-sub reveal is-visible">Keine Ausreden, keine Einzelkämpfer. Wöchentliche und monatliche Challenges, ein Ranking, das zählt — und eine Community, die dich zieht, auch wenn du mal keinen Bock hast.</p>
+    <div class="hero-actions reveal is-visible">
+      <a href="#challenges" class="btn btn-primary">Rein in die Community</a>
+      <a href="#ranking" class="btn btn-ghost">Ranking checken</a>
+    </div>
+
+    <div class="scoreboard reveal">
+      <div class="score"><b>214</b><span>Mitglieder</span></div>
+      <div class="score"><b>37</b><span>Challenges gelaufen</span></div>
+      <div class="score"><b>5</b><span>Monate bis Season-Finale</span></div>
+      <div class="score"><b>3</b><span>Deine Position aktuell</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ TICKER ============ -->
+<div class="ticker">
+  <div class="ticker-track">
+    <span>Gemeinsam trainieren</span><span>✺</span><span>Keine Ausreden</span><span>✺</span><span>Gemeinsam wachsen</span><span>✺</span><span>Jeder ist willkommen</span><span>✺</span>
+    <span>Gemeinsam trainieren</span><span>✺</span><span>Keine Ausreden</span><span>✺</span><span>Gemeinsam wachsen</span><span>✺</span><span>Jeder ist willkommen</span><span>✺</span>
+  </div>
+</div>
+
+<!-- ============ WEEKLY CHALLENGE ============ -->
+<section id="challenges">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <div>
+        <div class="eyebrow">Diese Woche</div>
+        <h2>Die Wochen-Challenge</h2>
+      </div>
+      <p>Jede Woche eine neue kleine Herausforderung — schnell erklärt, gemeinsam angepackt, im Alltag machbar.</p>
+    </div>
+
+    <div class="weekly-card reveal">
+      <div>
+        <div class="eyebrow">KW 30 · 20.–26. Juli</div>
+        <h3>100-Burpees-Challenge</h3>
+        <p style="margin-top:14px;max-width:420px;color:#DCD4BE;font-size:14.5px;line-height:1.6;font-weight:600;">Verteile 100 Burpees über die Woche, wie du magst — an einem Stück oder in Portionen. Hauptsache, du bleibst dran.</p>
+        <div class="weekly-meta">
+          <div><b>34</b>dabei</div>
+          <div><b>3</b>Tage übrig</div>
+          <div><b>+50</b>Season-Punkte</div>
+        </div>
+        <div class="avatar-stack">
+          <span style="background:#F2A94E;">LM</span>
+          <span style="background:#E2733A;">JK</span>
+          <span style="background:#96A97C;">SR</span>
+          <span style="background:#D9C48B;">+31</span>
+        </div>
+        <div class="weekly-actions">
+          <a href="#" class="btn btn-primary btn-small">Challenge beitreten</a>
+        </div>
+      </div>
+      <div>
+        <div class="ring-wrap">
+          <svg viewBox="0 0 120 120">
+            <circle class="ring-track" cx="60" cy="60" r="52"/>
+            <circle class="ring-fill" cx="60" cy="60" r="52" data-progress="57"/>
+          </svg>
+          <div class="ring-center"><b>57%</b><small>ERLEDIGT</small></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ MONTHLY CHALLENGE ============ -->
+<section style="padding-top:0;">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <div>
+        <div class="eyebrow">Juli · Saison 2026</div>
+        <h2>Die Monats-Challenge</h2>
+      </div>
+      <p>Jeden Monat zählt eine große Challenge auf die Season-Wertung ein. Am Monatsende gibt's einen Monatssieger — und einen Platz in der Hall of Fame.</p>
+    </div>
+
+    <div class="monthly-grid">
+      <div class="monthly-card reveal">
+        <div class="eyebrow">Läuft noch 8 Tage</div>
+        <h3>30 Tage Plank Challenge</h3>
+        <p class="monthly-desc">Jeden Tag im Juli ein bisschen länger planken. Eintragen, dranbleiben, am Monatsende zählt deine beste Gesamtzeit für die Season-Punkte.</p>
+        <div class="monthly-stats">
+          <div><b>112</b><small>Teilnehmer</small></div>
+          <div><b>4:20</b><small>Aktueller Bestwert</small></div>
+          <div><b>#3</b><small>Deine Position</small></div>
+        </div>
+        <div class="monthly-actions">
+          <a href="#" class="btn btn-primary">Zeit eintragen</a>
+        </div>
+      </div>
+
+      <div class="podium-card reveal">
+        <div class="eyebrow">Zwischenstand</div>
+        <div class="podium-title">Top der Monats-Challenge</div>
+        <div class="podium-list">
+          <div class="podium-row"><div class="podium-rank">1</div><div class="podium-name">Lena M.</div><div class="podium-pts">5:42</div></div>
+          <div class="podium-row"><div class="podium-rank">2</div><div class="podium-name">Jonas K.</div><div class="podium-pts">5:10</div></div>
+          <div class="podium-row"><div class="podium-rank">3</div><div class="podium-name">Sina R.</div><div class="podium-pts">4:20</div></div>
+        </div>
+        <a href="#ranking" class="btn btn-invert btn-small">Ganzes Ranking</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ RANKING / HALL OF FAME ============ -->
+<section id="ranking" class="on-ink">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <div>
+        <div class="eyebrow">Hall of Fame</div>
+        <h2>Die Sieger der Saison 2026</h2>
+      </div>
+      <p>Jeder Monatssieger der Saison landet hier. Am Saisonende entscheidet die Summe der Season-Punkte über die Season-Rangliste.</p>
+    </div>
+
+    <div class="hof-grid reveal">
+      <div class="hof-card">
+        <div class="hof-stamp">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 21h8M12 17v4M7 4h10v4a5 5 0 0 1-10 0V4z"/></svg>
+          <div class="hof-month">Januar</div>
+        </div>
+        <div class="hof-name">Jonas K.</div>
+        <div class="hof-note">10.000-Schritte-Challenge</div>
+      </div>
+      <div class="hof-card">
+        <div class="hof-stamp">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 21h8M12 17v4M7 4h10v4a5 5 0 0 1-10 0V4z"/></svg>
+          <div class="hof-month">Februar</div>
+        </div>
+        <div class="hof-name">Lena M.</div>
+        <div class="hof-note">Push-up-Progression</div>
+      </div>
+      <div class="hof-card">
+        <div class="hof-stamp">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 21h8M12 17v4M7 4h10v4a5 5 0 0 1-10 0V4z"/></svg>
+          <div class="hof-month">März</div>
+        </div>
+        <div class="hof-name">Sina R.</div>
+        <div class="hof-note">5km-Lauf-Challenge</div>
+      </div>
+      <div class="hof-card">
+        <div class="hof-stamp">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 21h8M12 17v4M7 4h10v4a5 5 0 0 1-10 0V4z"/></svg>
+          <div class="hof-month">April</div>
+        </div>
+        <div class="hof-name">Tim H.</div>
+        <div class="hof-note">Mobility-Monat</div>
+      </div>
+      <div class="hof-card">
+        <div class="hof-stamp">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 21h8M12 17v4M7 4h10v4a5 5 0 0 1-10 0V4z"/></svg>
+          <div class="hof-month">Mai</div>
+        </div>
+        <div class="hof-name">Lena M.</div>
+        <div class="hof-note">Kniebeugen-Marathon</div>
+      </div>
+      <div class="hof-card">
+        <div class="hof-stamp">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 21h8M12 17v4M7 4h10v4a5 5 0 0 1-10 0V4z"/></svg>
+          <div class="hof-month">Juni</div>
+        </div>
+        <div class="hof-name">Jonas K.</div>
+        <div class="hof-note">Team-Staffel-Woche</div>
+      </div>
+    </div>
+
+    <div class="season-panel">
+      <div class="season-blurb reveal">
+        <div class="eyebrow">Season 2026</div>
+        <h3>Noch 5 Monate bis zum Finale</h3>
+        <p>Jeder Monatssieg, jede Challenge-Teilnahme bringt Season-Punkte. Im Dezember wird final ausgewertet — die Top 3 bekommen ihren festen Platz in der Hall of Fame.</p>
+        <div class="season-progress">
+          <div class="bar-track"><div class="bar-fill" data-width="58"></div></div>
+          <small>7 von 12 Monaten gespielt</small>
+        </div>
+      </div>
+      <div class="rank-table reveal">
+        <div class="rank-row head"><div>#</div><div>Season-Rangliste</div><div>Punkte</div></div>
+        <div class="rank-row">
+          <div class="rank-num">1</div>
+          <div><div class="rank-name">Lena M.</div><div class="rank-sub">2 Monatssiege</div></div>
+          <div class="rank-pts">640 P.</div>
+        </div>
+        <div class="rank-row">
+          <div class="rank-num">2</div>
+          <div><div class="rank-name">Jonas K.</div><div class="rank-sub">2 Monatssiege</div></div>
+          <div class="rank-pts">610 P.</div>
+        </div>
+        <div class="rank-row">
+          <div class="rank-num">3</div>
+          <div><div class="rank-name">Sina R.</div><div class="rank-sub">1 Monatssieg</div></div>
+          <div class="rank-pts">545 P.</div>
+        </div>
+        <div class="rank-row">
+          <div class="rank-num">4</div>
+          <div><div class="rank-name">Tim H.</div><div class="rank-sub">1 Monatssieg</div></div>
+          <div class="rank-pts">510 P.</div>
+        </div>
+        <div class="rank-row">
+          <div class="rank-num">5</div>
+          <div><div class="rank-name">Anna B.</div><div class="rank-sub">0 Monatssiege</div></div>
+          <div class="rank-pts">462 P.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ CALENDAR ============ -->
+<section id="kalender">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <div>
+        <div class="eyebrow">Saison-Kalender</div>
+        <h2>Was diese Season ansteht</h2>
+      </div>
+      <p>Ein Blick auf die geplanten Monats-Challenges der Season 2026 — damit du dich schon vorbereiten kannst.</p>
+    </div>
+
+    <div class="cal-grid reveal">
+      <div class="cal-card"><div class="cal-month-num">01 / 2026</div><div class="cal-month-name">Januar</div><span class="cal-tag">Ausdauer</span><p class="cal-focus">10.000-Schritte-Challenge</p><div class="cal-status">Abgeschlossen</div></div>
+      <div class="cal-card"><div class="cal-month-num">02 / 2026</div><div class="cal-month-name">Februar</div><span class="cal-tag">Kraft</span><p class="cal-focus">Push-up-Progression</p><div class="cal-status">Abgeschlossen</div></div>
+      <div class="cal-card"><div class="cal-month-num">03 / 2026</div><div class="cal-month-name">März</div><span class="cal-tag">Ausdauer</span><p class="cal-focus">5km-Lauf-Challenge</p><div class="cal-status">Abgeschlossen</div></div>
+      <div class="cal-card"><div class="cal-month-num">04 / 2026</div><div class="cal-month-name">April</div><span class="cal-tag">Mobility</span><p class="cal-focus">Beweglichkeits-Monat</p><div class="cal-status">Abgeschlossen</div></div>
+      <div class="cal-card"><div class="cal-month-num">05 / 2026</div><div class="cal-month-name">Mai</div><span class="cal-tag">Kraft</span><p class="cal-focus">Kniebeugen-Marathon</p><div class="cal-status">Abgeschlossen</div></div>
+      <div class="cal-card"><div class="cal-month-num">06 / 2026</div><div class="cal-month-name">Juni</div><span class="cal-tag">Team</span><p class="cal-focus">Team-Staffel-Woche</p><div class="cal-status">Abgeschlossen</div></div>
+      <div class="cal-card current"><span class="cal-live">Live</span><div class="cal-month-num">07 / 2026</div><div class="cal-month-name">Juli</div><span class="cal-tag">Kraft</span><p class="cal-focus">30 Tage Plank Challenge</p><div class="cal-status">Läuft</div></div>
+      <div class="cal-card"><div class="cal-month-num">08 / 2026</div><div class="cal-month-name">August</div><span class="cal-tag">Ausdauer</span><p class="cal-focus">Sommer-Sprint-Challenge</p><div class="cal-status">Geplant</div></div>
+      <div class="cal-card"><div class="cal-month-num">09 / 2026</div><div class="cal-month-name">September</div><span class="cal-tag">Kraft</span><p class="cal-focus">Klimmzug-Aufbau</p><div class="cal-status">Geplant</div></div>
+      <div class="cal-card"><div class="cal-month-num">10 / 2026</div><div class="cal-month-name">Oktober</div><span class="cal-tag">Mobility</span><p class="cal-focus">Beweglichkeits-Monat II</p><div class="cal-status">Geplant</div></div>
+      <div class="cal-card"><div class="cal-month-num">11 / 2026</div><div class="cal-month-name">November</div><span class="cal-tag">Team</span><p class="cal-focus">Team-Duell-Woche</p><div class="cal-status">Geplant</div></div>
+      <div class="cal-card"><div class="cal-month-num">12 / 2026</div><div class="cal-month-name">Dezember</div><span class="cal-tag">Finale</span><p class="cal-focus">Season-Finale &amp; Auswertung</p><div class="cal-status">Geplant</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ PROFILE TEASER ============ -->
+<section id="profil">
+  <div class="wrap">
+    <div class="profile-section reveal">
+      <div>
+        <div class="eyebrow">Dein Profil</div>
+        <h2>Dein Fortschritt, an einem Ort.</h2>
+        <p>Bald bekommt jedes Mitglied ein eigenes Profil: Season-Punkte, Streaks, Badges und alle bisherigen Challenges auf einen Blick.</p>
+        <a href="#" class="btn btn-primary" style="margin-top:26px;">Frühzugang sichern</a>
+      </div>
+      <div class="profile-mock">
+        <div class="profile-top">
+          <div class="profile-avatar"></div>
+          <div>
+            <div class="profile-name">Lena M.</div>
+            <div class="profile-handle">@lena.trainiert</div>
+          </div>
+        </div>
+        <div class="profile-stats">
+          <div class="profile-stat"><b>640</b><small>Season Pkt.</small></div>
+          <div class="profile-stat"><b>12</b><small>Streak Tage</small></div>
+          <div class="profile-stat"><b>2</b><small>Monatssiege</small></div>
+        </div>
+        <div class="profile-badges">
+          <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 21h8M12 17v4M7 4h10v4a5 5 0 0 1-10 0V4z"/></svg></span>
+          <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M13 2 3 14h7l-1 8 10-12h-7l1-8z"/></svg></span>
+          <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2 4 7v6c0 5 3.5 8 8 9 4.5-1 8-4 8-9V7l-8-5z"/></svg></span>
+        </div>
+        <div class="profile-soon">Vollständiges Profil folgt in Kürze →</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ FOOTER ============ -->
+<footer>
+  <div class="wrap">
+    <div class="footer-top">
+      <div class="footer-quote">
+        <div class="eyebrow" style="margin-bottom:14px;">Joyforce</div>
+        <h3>Gemeinsam trainieren. Gemeinsam wachsen. Jeder ist willkommen.</h3>
+      </div>
+      <div class="footer-values">
+        <div><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M20 6 9 17l-5-5"/></svg>Wöchentliche &amp; monatliche Challenges</div>
+        <div><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M20 6 9 17l-5-5"/></svg>Hall of Fame &amp; Season-Ranking</div>
+        <div><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M20 6 9 17l-5-5"/></svg>Saison-Kalender mit geplanten Übungen</div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <div class="footer-brand">
+        <svg viewBox="0 0 100 100" fill="none">
+          <circle cx="50" cy="50" r="47" fill="#181C11" stroke="#E2733A" stroke-width="5"/>
+          <circle cx="58" cy="46" r="16" fill="#F2A94E"/>
+          <path d="M18 60 Q50 46 82 60" stroke="#F5EFE1" stroke-width="7" fill="none" stroke-linecap="round"/>
+        </svg>
+        <span>JOYFORCE</span>
+      </div>
+      <div class="footer-meta">
+        <a href="https://instagram.com/joyforcefitness" target="_blank" rel="noopener">@joyforcefitness</a>
+        <span>Stärke verbindet.</span>
+        <span>© 2026 Joyforce</span>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script>
+  const burger = document.querySelector('.burger');
+  const navLinks = document.querySelector('.nav-links');
+  burger.addEventListener('click', () => {
+    const open = navLinks.style.display === 'flex';
+    navLinks.style.display = open ? 'none' : 'flex';
+    navLinks.style.cssText += open ? '' : 'position:absolute;top:100%;left:0;right:0;background:#181C11;flex-direction:column;padding:20px 32px;gap:18px;border-bottom:3px solid #E2733A;';
+  });
+
+  const revealEls = document.querySelectorAll('.reveal');
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.classList.add('is-visible');
+        io.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.15 });
+  revealEls.forEach(el => io.observe(el));
+
+  document.querySelectorAll('.ring-fill').forEach(circle => {
+    const r = circle.r.baseVal.value;
+    const c = 2 * Math.PI * r;
+    const pct = parseFloat(circle.dataset.progress || '0');
+    circle.style.strokeDasharray = c;
+    circle.style.strokeDashoffset = c;
+    const ringIO = new IntersectionObserver((entries) => {
+      entries.forEach(e => {
+        if (e.isIntersecting) {
+          circle.style.strokeDashoffset = c * (1 - pct / 100);
+          ringIO.unobserve(circle);
+        }
+      });
+    }, { threshold: 0.4 });
+    ringIO.observe(circle);
+  });
+
+  document.querySelectorAll('.bar-fill').forEach(bar => {
+    const w = bar.dataset.width;
+    const barIO = new IntersectionObserver((entries) => {
+      entries.forEach(e => {
+        if (e.isIntersecting) {
+          bar.style.width = w + '%';
+          barIO.unobserve(bar);
+        }
+      });
+    }, { threshold: 0.4 });
+    barIO.observe(bar);
+  });
+</script>
+
+</body>
+</html>
