@@ -340,8 +340,8 @@
   .hof-card:nth-child(odd) .hof-stamp{transform:rotate(5deg);}
   .hof-stamp svg{width:22px;height:22px;color:var(--terracotta);}
   .hof-month{font-family:var(--font-mono);font-size:9.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--olive);margin-top:2px;}
-  .hof-name{font-weight:800;font-size:14px;color:var(--ink);}
-  .hof-note{font-size:11px;color:var(--ink-2);opacity:.75;font-weight:600;max-width:110px;}
+  .hof-name{font-weight:800;font-size:14px;color:var(--cream);}
+  .hof-note{font-size:11px;color:var(--sand);opacity:.8;font-weight:600;max-width:110px;}
 
   .season-panel{
     display:grid;grid-template-columns:1fr 1.3fr;gap:32px;margin-top:56px;
@@ -645,10 +645,10 @@
     </div>
 
     <div class="scoreboard reveal">
-      <div class="score"><b>214</b><span>Mitglieder</span></div>
-      <div class="score"><b>37</b><span>Challenges gelaufen</span></div>
-      <div class="score"><b>5</b><span>Monate bis Season-Finale</span></div>
-      <div class="score"><b>3</b><span>Deine Position aktuell</span></div>
+      <div class="score"><b id="scoreMembers">–</b><span>Mitglieder</span></div>
+      <div class="score"><b id="scoreChallenges">–</b><span>Challenges gelaufen</span></div>
+      <div class="score"><b id="scoreMonthsLeft">–</b><span>Monate bis Season-Finale</span></div>
+      <div class="score"><b id="scoreMyRank">–</b><span>Deine Position aktuell</span></div>
     </div>
   </div>
 </section>
@@ -1135,8 +1135,10 @@
     if (session) {
       const idx = entries.findIndex(e => e.profile_id === session.id);
       document.getElementById('monthlyMyRank').textContent = idx >= 0 ? '#' + (idx + 1) : '–';
+      document.getElementById('scoreMyRank').textContent = idx >= 0 ? '#' + (idx + 1) : '–';
     } else {
       document.getElementById('monthlyMyRank').textContent = '–';
+      document.getElementById('scoreMyRank').textContent = 'Login';
     }
 
     if (entries.length) {
@@ -1336,6 +1338,21 @@
     } catch (e) { console.warn('Profil-Stats:', e.message); }
   }
 
+  /* ---- Hero-Scoreboard (echte Mitglieder- & Season-Zahlen) ---- */
+  async function loadHeroStats() {
+    try {
+      const profiles = await sbFetch('/rest/v1/profiles?select=id');
+      document.getElementById('scoreMembers').textContent = profiles ? profiles.length : '–';
+    } catch (e) { console.warn('Mitgliederzahl:', e.message); }
+
+    try {
+      const now = new Date(), curMonth = now.getMonth() + 1;
+      const months = await sbFetch(`/rest/v1/season_months?season_year=eq.${SEASON}&is_december_vote=not.is.true&month=lte.${curMonth}&select=id`);
+      document.getElementById('scoreChallenges').textContent = months ? months.length : '–';
+      document.getElementById('scoreMonthsLeft').textContent = Math.max(0, 12 - curMonth);
+    } catch (e) { console.warn('Season-Zahlen:', e.message); }
+  }
+
   async function loadChallengeData() {
     await Promise.allSettled([
       loadMonthlyChallenge(),
@@ -1344,6 +1361,7 @@
       loadCalendar(),
       loadStreak(),
       loadProfileStats(),
+      loadHeroStats(),
     ]);
   }
 
