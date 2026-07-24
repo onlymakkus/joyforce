@@ -666,39 +666,33 @@
   <div class="wrap">
     <div class="sec-head reveal">
       <div>
-        <div class="eyebrow">Diese Woche</div>
-        <h2>Die Wochen-Challenge</h2>
+        <div class="eyebrow">Dein Streak</div>
+        <h2>Bleib dran, jeden Tag</h2>
       </div>
-      <p>Jede Woche eine neue kleine Herausforderung — schnell erklärt, gemeinsam angepackt, im Alltag machbar.</p>
+      <p>Trag heute einen aktiven Tag ein und halt deinen Streak am Leben — zählt genauso wie auf onlymakkus.de.</p>
     </div>
 
     <div class="weekly-card reveal">
       <div>
-        <div class="eyebrow">KW 30 · 20.–26. Juli</div>
-        <h3>100-Burpees-Challenge</h3>
-        <p style="margin-top:14px;max-width:420px;color:#DCD4BE;font-size:14.5px;line-height:1.6;font-weight:600;">Verteile 100 Burpees über die Woche, wie du magst — an einem Stück oder in Portionen. Hauptsache, du bleibst dran.</p>
+        <div class="eyebrow" id="weeklyEyebrow">Daily Streak</div>
+        <h3 id="weeklyTitle">Dein aktueller Lauf</h3>
+        <p id="weeklyDesc" style="margin-top:14px;max-width:420px;color:#DCD4BE;font-size:14.5px;line-height:1.6;font-weight:600;">Jeder Tag mit einem Eintrag zählt. Verpass keinen — der Rekord will geknackt werden.</p>
         <div class="weekly-meta">
-          <div><b>34</b>dabei</div>
-          <div><b>3</b>Tage übrig</div>
-          <div><b>+50</b>Season-Punkte</div>
-        </div>
-        <div class="avatar-stack">
-          <span style="background:#F2A94E;">LM</span>
-          <span style="background:#E2733A;">JK</span>
-          <span style="background:#96A97C;">SR</span>
-          <span style="background:#D9C48B;">+31</span>
+          <div><b id="weeklyParticipants">–</b>Tage aktuell</div>
+          <div><b id="weeklyDaysLeft">–</b>Rekord Tage</div>
+          <div><b id="weeklyPoints">–</b>Heute?</div>
         </div>
         <div class="weekly-actions">
-          <a href="#" class="btn btn-primary btn-small">Challenge beitreten</a>
+          <button class="btn btn-primary btn-small" id="weeklyJoinBtn">Heute eintragen</button>
         </div>
       </div>
       <div>
         <div class="ring-wrap">
           <svg viewBox="0 0 120 120">
             <circle class="ring-track" cx="60" cy="60" r="52"/>
-            <circle class="ring-fill" cx="60" cy="60" r="52" data-progress="57"/>
+            <circle class="ring-fill" id="weeklyRingFill" cx="60" cy="60" r="52" data-progress="0"/>
           </svg>
-          <div class="ring-center"><b>57%</b><small>ERLEDIGT</small></div>
+          <div class="ring-center"><b id="weeklyRingPct">–</b><small>VON 7 TAGEN</small></div>
         </div>
       </div>
     </div>
@@ -718,23 +712,23 @@
 
     <div class="monthly-grid">
       <div class="monthly-card reveal">
-        <div class="eyebrow">Läuft noch 8 Tage</div>
-        <h3>30 Tage Plank Challenge</h3>
-        <p class="monthly-desc">Jeden Tag im Juli ein bisschen länger planken. Eintragen, dranbleiben, am Monatsende zählt deine beste Gesamtzeit für die Season-Punkte.</p>
+        <div class="eyebrow" id="monthlyEyebrow">Läuft noch 8 Tage</div>
+        <h3 id="monthlyTitle">30 Tage Plank Challenge</h3>
+        <p class="monthly-desc" id="monthlyDesc">Jeden Tag im Juli ein bisschen länger planken. Eintragen, dranbleiben, am Monatsende zählt deine beste Gesamtzeit für die Season-Punkte.</p>
         <div class="monthly-stats">
-          <div><b>112</b><small>Teilnehmer</small></div>
-          <div><b>4:20</b><small>Aktueller Bestwert</small></div>
-          <div><b>#3</b><small>Deine Position</small></div>
+          <div><b id="monthlyParticipants">112</b><small>Teilnehmer</small></div>
+          <div><b id="monthlyBest">4:20</b><small>Aktueller Bestwert</small></div>
+          <div><b id="monthlyMyRank">–</b><small>Deine Position</small></div>
         </div>
         <div class="monthly-actions">
-          <a href="#" class="btn btn-primary">Zeit eintragen</a>
+          <button class="btn btn-primary" id="monthlyEntryBtn">Wert eintragen</button>
         </div>
       </div>
 
       <div class="podium-card reveal">
         <div class="eyebrow">Zwischenstand</div>
         <div class="podium-title">Top der Monats-Challenge</div>
-        <div class="podium-list">
+        <div class="podium-list" id="podiumList">
           <div class="podium-row"><div class="podium-rank">1</div><div class="podium-name">Lena M.</div><div class="podium-pts">5:42</div></div>
           <div class="podium-row"><div class="podium-rank">2</div><div class="podium-name">Jonas K.</div><div class="podium-pts">5:10</div></div>
           <div class="podium-row"><div class="podium-rank">3</div><div class="podium-name">Sina R.</div><div class="podium-pts">4:20</div></div>
@@ -756,7 +750,7 @@
       <p>Jeder Monatssieger der Saison landet hier. Am Saisonende entscheidet die Summe der Season-Punkte über die Season-Rangliste.</p>
     </div>
 
-    <div class="hof-grid reveal">
+    <div class="hof-grid reveal" id="hofGrid" data-fallback="true">
       <div class="hof-card">
         <div class="hof-stamp">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 21h8M12 17v4M7 4h10v4a5 5 0 0 1-10 0V4z"/></svg>
@@ -810,14 +804,14 @@
     <div class="season-panel">
       <div class="season-blurb reveal">
         <div class="eyebrow">Season 2026</div>
-        <h3>Noch 5 Monate bis zum Finale</h3>
+        <h3 id="seasonHeadline">Noch 5 Monate bis zum Finale</h3>
         <p>Jeder Monatssieg, jede Challenge-Teilnahme bringt Season-Punkte. Im Dezember wird final ausgewertet — die Top 3 bekommen ihren festen Platz in der Hall of Fame.</p>
         <div class="season-progress">
-          <div class="bar-track"><div class="bar-fill" data-width="58"></div></div>
-          <small>7 von 12 Monaten gespielt</small>
+          <div class="bar-track"><div class="bar-fill" id="seasonBar" data-width="58"></div></div>
+          <small id="seasonBarLabel">7 von 12 Monaten gespielt</small>
         </div>
       </div>
-      <div class="rank-table reveal">
+      <div class="rank-table reveal" id="rankTable" data-fallback="true">
         <div class="rank-row head"><div>#</div><div>Season-Rangliste</div><div>Punkte</div></div>
         <div class="rank-row">
           <div class="rank-num">1</div>
@@ -860,7 +854,7 @@
       <p>Ein Blick auf die geplanten Monats-Challenges der Season 2026 — damit du dich schon vorbereiten kannst.</p>
     </div>
 
-    <div class="cal-grid reveal">
+    <div class="cal-grid reveal" id="calGrid" data-fallback="true">
       <div class="cal-card"><div class="cal-month-num">01 / 2026</div><div class="cal-month-name">Januar</div><span class="cal-tag">Ausdauer</span><p class="cal-focus">10.000-Schritte-Challenge</p><div class="cal-status">Abgeschlossen</div></div>
       <div class="cal-card"><div class="cal-month-num">02 / 2026</div><div class="cal-month-name">Februar</div><span class="cal-tag">Kraft</span><p class="cal-focus">Push-up-Progression</p><div class="cal-status">Abgeschlossen</div></div>
       <div class="cal-card"><div class="cal-month-num">03 / 2026</div><div class="cal-month-name">März</div><span class="cal-tag">Ausdauer</span><p class="cal-focus">5km-Lauf-Challenge</p><div class="cal-status">Abgeschlossen</div></div>
@@ -897,8 +891,8 @@
         </div>
         <div class="profile-stats">
           <div class="profile-stat"><b>640</b><small>Season Pkt.</small></div>
-          <div class="profile-stat"><b>12</b><small>Streak Tage</small></div>
-          <div class="profile-stat"><b>2</b><small>Monatssiege</small></div>
+          <div class="profile-stat"><b>12</b><small>Monatssiege</small></div>
+          <div class="profile-stat"><b>2</b><small>Erfolge</small></div>
         </div>
         <div class="profile-badges">
           <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 21h8M12 17v4M7 4h10v4a5 5 0 0 1-10 0V4z"/></svg></span>
@@ -1022,6 +1016,7 @@
     localStorage.removeItem(SESSION_KEY);
     renderAuthUI();
     rebindAuthOpen();
+    loadChallengeData();
   }
 
   function rebindAuthOpen() {
@@ -1059,8 +1054,15 @@
     loginSubmit.disabled = true;
     loginSubmit.textContent = 'Prüfe …';
     try {
-      const rows = await sbFetch('/rest/v1/profiles?name=eq.' + encodeURIComponent(name) + '&select=*');
-      if (!rows || rows.length === 0) throw new Error('Kein Profil mit diesem Namen gefunden.');
+      let filter;
+      if (name.includes('#')) {
+        const [n, d] = name.split('#');
+        filter = `name=eq.${encodeURIComponent(n.trim())}&discriminator=eq.${encodeURIComponent(d.trim())}`;
+      } else {
+        filter = `name=eq.${encodeURIComponent(name)}`;
+      }
+      const rows = await sbFetch(`/rest/v1/profiles?${filter}&select=*`);
+      if (!rows || rows.length === 0) throw new Error('Kein Profil gefunden. Bei doppelten Namen: Name#1234 eingeben.');
       const profile = rows[0];
       const ok = dcodeIO.bcrypt.compareSync(password, profile.password_hash);
       if (!ok) throw new Error('Passwort stimmt nicht.');
@@ -1074,6 +1076,7 @@
       localStorage.setItem(SESSION_KEY, JSON.stringify(session));
       closeLoginModal();
       renderAuthUI();
+      loadChallengeData();
     } catch (err) {
       loginError.textContent = err.message || 'Login fehlgeschlagen.';
       loginError.hidden = false;
@@ -1082,6 +1085,269 @@
       loginSubmit.textContent = 'Einloggen';
     }
   });
+
+  /* ---------- SHARED CHALLENGE DATA — echte onlymakkus-Tabellen ---------- */
+  const SEASON = 2026;
+  const MONTH_NAMES = ['Januar','Februar','März','April','Mai','Juni','Juli','August','September','Oktober','November','Dezember'];
+
+  function slugify(name) { return String(name || '').toLowerCase().replace(/[^a-z0-9]+/g, '').trim(); }
+  function profileDisplay(p) {
+    if (!p) return 'Unbekannt';
+    if (p.display_name) return p.display_name;
+    return p.discriminator ? `${p.name}#${p.discriminator}` : p.name;
+  }
+
+  let ACTIVE_MONTH = null; // { monthId, exerciseId, challengeSlug, goal, unit, name }
+
+  /* ---- Monats-Challenge (season_months + exercises + challenge_entries) ---- */
+  async function loadMonthlyChallenge() {
+    const now = new Date(), y = now.getFullYear(), m = now.getMonth() + 1;
+    const rows = await sbFetch(`/rest/v1/season_months?season_year=eq.${y}&month=eq.${m}&select=*,exercises(*)`);
+    const row = rows && rows[0];
+    if (!row || row.is_december_vote || !row.exercises) {
+      document.getElementById('monthlyEyebrow').textContent = row && row.is_december_vote ? 'Dezember-Voting läuft' : 'Keine Challenge aktiv';
+      document.getElementById('monthlyTitle').textContent = '—';
+      document.getElementById('monthlyDesc').textContent = row && row.is_december_vote
+        ? 'Die Übung für nächstes Jahr wird gerade auf onlymakkus.de erabstimmt.'
+        : 'Für diesen Monat ist noch keine Challenge hinterlegt.';
+      return;
+    }
+    const ex = row.exercises;
+    const goal = row.custom_goal || ex.default_goal || 60;
+    const unit = ex.default_unit || '';
+    ACTIVE_MONTH = { monthId: row.id, exerciseId: ex.id, challengeSlug: slugify(ex.name), goal, unit, name: ex.name };
+
+    const daysLeft = Math.max(0, Math.ceil((new Date(y, m, 0) - now) / 86400000));
+    document.getElementById('monthlyEyebrow').textContent = daysLeft > 0 ? `Läuft noch ${daysLeft} Tage · ${MONTH_NAMES[m - 1]} ${y}` : 'Abgeschlossen';
+    document.getElementById('monthlyTitle').textContent = ex.name;
+    document.getElementById('monthlyDesc').textContent = `Ziel: ${goal} ${unit} gesamt. Jeder Eintrag zählt für Season-Punkte & Hall of Fame — geteilt mit onlymakkus.de.`;
+
+    const entries = (await sbFetch(`/rest/v1/challenge_entries?season_month_id=eq.${row.id}&select=*`)) || [];
+    document.getElementById('monthlyParticipants').textContent = entries.length;
+
+    const capped = e => Math.min(e.value1 || 0, goal);
+    const ts = e => { const t = e.last_progress_ts ? Date.parse(e.last_progress_ts) : NaN; return Number.isNaN(t) ? Infinity : t; };
+    entries.sort((a, b) => capped(b) - capped(a) || ts(a) - ts(b) || a.id - b.id);
+
+    document.getElementById('monthlyBest').textContent = entries.length ? `${entries[0].value1 || 0} ${unit}` : '–';
+
+    const session = getSession();
+    if (session) {
+      const idx = entries.findIndex(e => e.profile_id === session.id);
+      document.getElementById('monthlyMyRank').textContent = idx >= 0 ? '#' + (idx + 1) : '–';
+    } else {
+      document.getElementById('monthlyMyRank').textContent = '–';
+    }
+
+    if (entries.length) {
+      const list = document.getElementById('podiumList');
+      list.innerHTML = entries.slice(0, 3).map((e, i) => `
+        <div class="podium-row">
+          <div class="podium-rank">${i + 1}</div>
+          <div class="podium-name">${profileDisplay({ name: e.name })}</div>
+          <div class="podium-pts">${e.value1 || 0} ${unit}</div>
+        </div>`).join('');
+    }
+
+    document.getElementById('monthlyEntryBtn').textContent = `Wert eintragen (${unit})`;
+    document.getElementById('monthlyEntryBtn').onclick = () => handleMonthlyEntry();
+  }
+
+  async function handleMonthlyEntry() {
+    const session = getSession();
+    if (!session) { openLoginModal(); return; }
+    if (!ACTIVE_MONTH) { alert('Für diesen Monat läuft keine Challenge.'); return; }
+    const raw = window.prompt(`${ACTIVE_MONTH.name}\nWert hinzufügen (${ACTIVE_MONTH.unit}):`);
+    if (raw === null || raw.trim() === '') return;
+    const v1 = Math.max(0, parseInt(raw, 10) || 0);
+    if (!v1) { alert('Bitte eine Zahl größer 0 eingeben.'); return; }
+    try {
+      const existing = await sbFetch(`/rest/v1/challenge_entries?challenge=eq.${ACTIVE_MONTH.challengeSlug}&profile_id=eq.${session.id}&select=*`);
+      if (existing && existing.length) {
+        const prev = existing[0];
+        const newV1 = (prev.value1 || 0) + v1;
+        await sbFetch(`/rest/v1/challenge_entries?id=eq.${prev.id}`, {
+          method: 'PATCH', prefer: 'return=minimal',
+          body: JSON.stringify({ value1: newV1, last_progress_ts: new Date().toISOString() }),
+        });
+      } else {
+        const entry = {
+          challenge: ACTIVE_MONTH.challengeSlug,
+          season_month_id: ACTIVE_MONTH.monthId,
+          profile_id: session.id,
+          name: session.name,
+          value1: v1,
+          last_progress_ts: new Date().toISOString(),
+        };
+        await sbFetch('/rest/v1/challenge_entries', { method: 'POST', prefer: 'return=representation', body: JSON.stringify(entry) });
+      }
+      try { await sbFetch('/rest/v1/rpc/log_active_day', { method: 'POST', prefer: 'return=minimal', body: JSON.stringify({ p_profile_id: session.id }) }); } catch (e) {}
+      await loadMonthlyChallenge();
+      await loadSeasonRanking();
+      await loadStreak();
+    } catch (err) {
+      alert('Eintragen hat nicht geklappt: ' + err.message);
+    }
+  }
+
+  /* ---- Hall of Fame (season_months + v_month_results, rank 1) ---- */
+  async function loadHallOfFame() {
+    const months = await sbFetch(`/rest/v1/season_months?season_year=eq.${SEASON}&select=*,exercises(name)&order=month.asc`);
+    if (!months || !months.length) return;
+    const results = (await sbFetch(`/rest/v1/v_month_results?rank=eq.1&select=season_month_id,profile_id,person,points,exercise_name`)) || [];
+    const winnerOf = {};
+    results.forEach(r => { winnerOf[r.season_month_id] = r; });
+
+    const grid = document.getElementById('hofGrid');
+    grid.innerHTML = months.filter(row => !row.is_december_vote).map(row => {
+      const w = winnerOf[row.id];
+      const exName = (row.exercises && row.exercises.name) || '—';
+      return `
+        <div class="hof-card">
+          <div class="hof-stamp">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 21h8M12 17v4M7 4h10v4a5 5 0 0 1-10 0V4z"/></svg>
+            <div class="hof-month">${MONTH_NAMES[row.month - 1]}</div>
+          </div>
+          <div class="hof-name">${w ? w.person : 'offen'}</div>
+          <div class="hof-note">${exName}</div>
+        </div>`;
+    }).join('');
+  }
+
+  /* ---- Season-Ranking (v_season_ranking) ---- */
+  async function loadSeasonRanking() {
+    const data = await sbFetch(`/rest/v1/v_season_ranking?season_year=eq.${SEASON}&select=*&order=total_points.desc&limit=8`);
+    if (!data || !data.length) return;
+    const table = document.getElementById('rankTable');
+    table.innerHTML = `<div class="rank-row head"><div>#</div><div>Season-Rangliste</div><div>Punkte</div></div>` +
+      data.map((r, i) => `
+        <div class="rank-row">
+          <div class="rank-num">${i + 1}</div>
+          <div><div class="rank-name">${r.person}</div><div class="rank-sub">${r.wins} Monatssieg${r.wins === 1 ? '' : 'e'} · ${r.teilnahmen} Challenges</div></div>
+          <div class="rank-pts">${r.total_points} P.</div>
+        </div>`).join('');
+
+    const now = new Date();
+    document.getElementById('seasonHeadline').textContent = `Noch ${Math.max(0, 12 - now.getMonth() - 1)} Monate bis zum Finale`;
+    const pct = Math.round(((now.getMonth() + 1) / 12) * 100);
+    const bar = document.getElementById('seasonBar');
+    bar.dataset.width = pct;
+    document.getElementById('seasonBarLabel').textContent = `${now.getMonth() + 1} von 12 Monaten gespielt`;
+    const barIO = new IntersectionObserver((entries2) => {
+      entries2.forEach(e => { if (e.isIntersecting) { bar.style.width = pct + '%'; barIO.unobserve(bar); } });
+    }, { threshold: 0.4 });
+    barIO.observe(bar);
+  }
+
+  /* ---- Saison-Kalender (season_months + exercises) ---- */
+  async function loadCalendar() {
+    const rows = await sbFetch(`/rest/v1/season_months?season_year=eq.${SEASON}&select=*,exercises(*)&order=month.asc`);
+    if (!rows || !rows.length) return;
+    const now = new Date(), curMonth = now.getMonth() + 1;
+    const grid = document.getElementById('calGrid');
+    grid.innerHTML = rows.map(row => {
+      const isCurrent = row.month === curMonth;
+      const isPast = row.month < curMonth;
+      const status = isCurrent ? 'Läuft' : (isPast ? 'Abgeschlossen' : 'Geplant');
+      if (row.is_december_vote) {
+        return `
+          <div class="cal-card${isCurrent ? ' current' : ''}">
+            ${isCurrent ? '<span class="cal-live">Live</span>' : ''}
+            <div class="cal-month-num">${String(row.month).padStart(2, '0')} / ${row.season_year}</div>
+            <div class="cal-month-name">${MONTH_NAMES[row.month - 1]}</div>
+            <span class="cal-tag">Voting</span>
+            <p class="cal-focus">Bonus-Challenge — Community entscheidet</p>
+            <div class="cal-status">${status}</div>
+          </div>`;
+      }
+      const ex = row.exercises;
+      const goal = ex ? (row.custom_goal || ex.default_goal) : null;
+      return `
+        <div class="cal-card${isCurrent ? ' current' : ''}">
+          ${isCurrent ? '<span class="cal-live">Live</span>' : ''}
+          <div class="cal-month-num">${String(row.month).padStart(2, '0')} / ${row.season_year}</div>
+          <div class="cal-month-name">${MONTH_NAMES[row.month - 1]}</div>
+          <span class="cal-tag">${ex ? (ex.default_unit || 'Challenge') : 'Offen'}</span>
+          <p class="cal-focus">${ex ? `${ex.name}${goal ? ' · Ziel ' + goal : ''}` : 'Noch nicht geplant'}</p>
+          <div class="cal-status">${status}</div>
+        </div>`;
+    }).join('');
+  }
+
+  /* ---- Daily-Streak (RPCs) ---- */
+  async function loadStreak() {
+    const session = getSession();
+    document.getElementById('weeklyJoinBtn').onclick = () => handleStreakCheckin();
+    if (!session) {
+      document.getElementById('weeklyParticipants').textContent = '–';
+      document.getElementById('weeklyDaysLeft').textContent = '–';
+      document.getElementById('weeklyPoints').textContent = 'Login nötig';
+      document.getElementById('weeklyRingPct').textContent = '–';
+      return;
+    }
+    try {
+      const [cur, rec] = await Promise.all([
+        sbFetch('/rest/v1/rpc/current_daily_streak', { method: 'POST', body: JSON.stringify({ p_profile_id: session.id }) }),
+        sbFetch('/rest/v1/rpc/longest_daily_streak', { method: 'POST', body: JSON.stringify({ p_profile_id: session.id }) }),
+      ]);
+      const streak = typeof cur === 'number' ? cur : 0;
+      const record = typeof rec === 'number' ? rec : 0;
+      document.getElementById('weeklyParticipants').textContent = streak;
+      document.getElementById('weeklyDaysLeft').textContent = record;
+      document.getElementById('weeklyPoints').textContent = streak > 0 ? 'Ja 🔥' : 'Noch nicht';
+
+      const pct = Math.min(100, Math.round((streak / 7) * 100));
+      document.getElementById('weeklyRingPct').textContent = streak;
+      const ring = document.getElementById('weeklyRingFill');
+      ring.dataset.progress = pct;
+      const r = ring.r.baseVal.value, circ = 2 * Math.PI * r;
+      ring.style.strokeDasharray = circ;
+      ring.style.strokeDashoffset = circ * (1 - pct / 100);
+    } catch (e) { console.warn('Streak:', e.message); }
+  }
+
+  async function handleStreakCheckin() {
+    const session = getSession();
+    if (!session) { openLoginModal(); return; }
+    try {
+      await sbFetch('/rest/v1/rpc/log_active_day', { method: 'POST', prefer: 'return=minimal', body: JSON.stringify({ p_profile_id: session.id }) });
+      await loadStreak();
+    } catch (err) { alert('Ging nicht: ' + err.message); }
+  }
+
+  /* ---- Profil-Kachel mit echten Season-Stats ---- */
+  async function loadProfileStats() {
+    const session = getSession();
+    if (!session) return;
+    try {
+      const [season, ach] = await Promise.all([
+        sbFetch(`/rest/v1/v_season_ranking?profile_id=eq.${session.id}&season_year=eq.${SEASON}&select=*`),
+        sbFetch(`/rest/v1/achievements?profile_id=eq.${session.id}&select=code`),
+      ]);
+      const s = season && season[0];
+      const stats = document.querySelectorAll('.profile-stat b');
+      if (stats.length >= 3) {
+        stats[0].textContent = s ? s.total_points : 0;
+        stats[1].textContent = s ? s.wins : 0;
+        stats[2].textContent = (ach || []).length;
+      }
+      const labels = document.querySelectorAll('.profile-stat small');
+      if (labels.length >= 3) { labels[1].textContent = 'Monatssiege'; labels[2].textContent = 'Erfolge'; }
+    } catch (e) { console.warn('Profil-Stats:', e.message); }
+  }
+
+  async function loadChallengeData() {
+    await Promise.allSettled([
+      loadMonthlyChallenge(),
+      loadHallOfFame(),
+      loadSeasonRanking(),
+      loadCalendar(),
+      loadStreak(),
+      loadProfileStats(),
+    ]);
+  }
+
+  loadChallengeData();
 
   renderAuthUI();
   rebindAuthOpen();
