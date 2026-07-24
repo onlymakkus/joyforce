@@ -429,7 +429,10 @@
     width:58px;height:58px;
     border-radius:50%;
     background:var(--terracotta);
+    background-size:cover;background-position:center;
     border:2px solid var(--cream);
+    display:flex;align-items:center;justify-content:center;
+    font-family:var(--font-display);font-size:22px;color:var(--ink);
     flex:none;
   }
   .profile-name{font-weight:800;font-size:17px;color:var(--cream);}
@@ -473,7 +476,55 @@
   .footer-meta{font-family:var(--font-mono);font-size:12px;color:var(--sand);display:flex;gap:22px;flex-wrap:wrap;}
   .footer-meta a:hover{color:var(--terracotta);}
 
-  /* ---------- RESPONSIVE ---------- */
+  /* ---------- AUTH ---------- */
+  .auth-chip{
+    display:flex;align-items:center;gap:10px;
+    background:var(--ink-2);border:2px solid var(--terracotta);border-radius:100px;
+    padding:6px 14px 6px 6px;cursor:pointer;
+    font-family:var(--font-mono);font-size:12.5px;color:var(--cream);font-weight:600;
+  }
+  .auth-avatar{
+    width:26px;height:26px;border-radius:50%;background:var(--terracotta);
+    display:flex;align-items:center;justify-content:center;
+    font-family:var(--font-display);font-size:12px;color:var(--ink);
+    background-size:cover;background-position:center;flex:none;
+  }
+  .modal-overlay{
+    position:fixed;inset:0;z-index:100;
+    background:rgba(24,28,17,.72);
+    display:flex;align-items:center;justify-content:center;
+    padding:24px;
+  }
+  .modal-overlay[hidden]{display:none;}
+  .modal-card{
+    background:var(--cream);border:3px solid var(--ink);border-radius:var(--radius);
+    box-shadow:var(--shadow);padding:40px;max-width:400px;width:100%;position:relative;
+  }
+  .modal-close{
+    position:absolute;top:16px;right:16px;
+    background:var(--ink);color:var(--cream);border:none;border-radius:50%;
+    width:30px;height:30px;cursor:pointer;font-size:14px;
+  }
+  .modal-title{font-size:30px;color:var(--ink);margin-top:12px;}
+  .modal-sub{margin-top:10px;font-size:13.5px;line-height:1.55;color:var(--ink-2);font-weight:600;}
+  #loginForm{display:flex;flex-direction:column;gap:16px;margin-top:24px;}
+  #loginForm label{
+    display:flex;flex-direction:column;gap:6px;
+    font-family:var(--font-mono);font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--olive);font-weight:700;
+  }
+  #loginForm input{
+    font-family:var(--font-body);font-size:15px;font-weight:600;color:var(--ink);
+    padding:12px 14px;border:2px solid var(--ink);border-radius:var(--radius-sm);
+    background:var(--cream);
+  }
+  #loginForm input:focus{outline:3px solid var(--sun);outline-offset:1px;}
+  #loginForm .btn{margin-top:6px;width:100%;justify-content:center;}
+  .modal-error{
+    background:var(--terracotta);color:var(--ink);font-size:13px;font-weight:700;
+    padding:10px 14px;border-radius:var(--radius-sm);border:2px solid var(--ink);
+  }
+  .modal-hint{margin-top:20px;font-family:var(--font-mono);font-size:10.5px;color:var(--olive);opacity:.8;}
+
   @media (max-width:980px){
     .nav-links{display:none;}
     .burger{display:flex;}
@@ -522,11 +573,32 @@
       <li><a href="#profil">Profil</a></li>
     </ul>
     <div class="nav-cta">
-      <a href="#challenges" class="btn btn-primary btn-small">Community beitreten</a>
+      <button id="authBtn" class="btn btn-primary btn-small">Login</button>
       <button class="burger" aria-label="Menü öffnen"><span></span><span></span><span></span></button>
     </div>
   </nav>
 </header>
+
+<!-- ============ LOGIN MODAL ============ -->
+<div id="loginOverlay" class="modal-overlay" hidden>
+  <div class="modal-card">
+    <button id="loginClose" class="modal-close" aria-label="Schließen">✕</button>
+    <div class="eyebrow">Joyforce Login</div>
+    <h3 class="modal-title">Rein in die Community.</h3>
+    <p class="modal-sub">Login mit deinem bestehenden Joyforce-Profil (gleiche Datenbank wie onlymakkus.de).</p>
+    <form id="loginForm">
+      <label>Name
+        <input type="text" id="loginName" autocomplete="username" required>
+      </label>
+      <label>Passwort
+        <input type="password" id="loginPassword" autocomplete="current-password" required>
+      </label>
+      <div id="loginError" class="modal-error" hidden></div>
+      <button type="submit" class="btn btn-primary" id="loginSubmit">Einloggen</button>
+    </form>
+    <div class="modal-hint">Test-Profile: Markus, Laura, Hendrik, Vanessa, Alena</div>
+  </div>
+</div>
 
 <!-- ============ HERO ============ -->
 <section class="hero" id="start">
@@ -812,15 +884,15 @@
       <div>
         <div class="eyebrow">Dein Profil</div>
         <h2>Dein Fortschritt, an einem Ort.</h2>
-        <p>Bald bekommt jedes Mitglied ein eigenes Profil: Season-Punkte, Streaks, Badges und alle bisherigen Challenges auf einen Blick.</p>
-        <a href="#" class="btn btn-primary" style="margin-top:26px;">Frühzugang sichern</a>
+        <p id="profileIntro">Bald bekommt jedes Mitglied ein eigenes Profil: Season-Punkte, Streaks, Badges und alle bisherigen Challenges auf einen Blick.</p>
+        <button id="profileCta" class="btn btn-primary" style="margin-top:26px;">Frühzugang sichern</button>
       </div>
       <div class="profile-mock">
         <div class="profile-top">
-          <div class="profile-avatar"></div>
+          <div class="profile-avatar" id="profileAvatar">L</div>
           <div>
-            <div class="profile-name">Lena M.</div>
-            <div class="profile-handle">@lena.trainiert</div>
+            <div class="profile-name" id="profileName">Lena M.</div>
+            <div class="profile-handle" id="profileHandle">@lena.trainiert · Beispiel</div>
           </div>
         </div>
         <div class="profile-stats">
@@ -833,7 +905,7 @@
           <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M13 2 3 14h7l-1 8 10-12h-7l1-8z"/></svg></span>
           <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2 4 7v6c0 5 3.5 8 8 9 4.5-1 8-4 8-9V7l-8-5z"/></svg></span>
         </div>
-        <div class="profile-soon">Vollständiges Profil folgt in Kürze →</div>
+        <div class="profile-soon" id="profileSoon">Vollständiges Profil folgt in Kürze →</div>
       </div>
     </div>
   </div>
@@ -871,6 +943,149 @@
   </div>
 </footer>
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bcryptjs/2.4.3/bcrypt.min.js"></script>
+<script>
+  /* ---------- SUPABASE: onlymakkus profiles DB ---------- */
+  const SB_URL = 'https://bsubsesbcxdaqofmkiqg.supabase.co';
+  const SB_KEY = 'sb_publishable_fA2Dca6SVp0eB8k_WuqLrw_zplTnXBU';
+  const SESSION_KEY = 'om_profile_session';
+
+  async function sbFetch(path, opts = {}) {
+    const r = await fetch(SB_URL + path, {
+      ...opts,
+      headers: {
+        'apikey': SB_KEY,
+        'Authorization': 'Bearer ' + SB_KEY,
+        'Content-Type': 'application/json',
+        ...(opts.method && opts.method !== 'GET' ? { 'Prefer': 'return=representation' } : {}),
+        ...opts.headers,
+      },
+    });
+    if (!r.ok) {
+      const errText = await r.text().catch(() => '');
+      throw new Error(`Supabase ${r.status}: ${errText}`);
+    }
+    if (r.status === 204) return null;
+    return r.json();
+  }
+
+  function displayNameFor(session) {
+    if (session.displayName) return session.displayName;
+    return session.discriminator ? `${session.name}#${session.discriminator}` : session.name;
+  }
+
+  function getSession() {
+    try {
+      const raw = localStorage.getItem(SESSION_KEY);
+      return raw ? JSON.parse(raw) : null;
+    } catch { return null; }
+  }
+
+  function renderAuthUI() {
+    const session = getSession();
+    const authBtn = document.getElementById('authBtn');
+    const profileAvatar = document.getElementById('profileAvatar');
+    const profileName = document.getElementById('profileName');
+    const profileHandle = document.getElementById('profileHandle');
+    const profileSoon = document.getElementById('profileSoon');
+    const profileIntro = document.getElementById('profileIntro');
+    const profileCta = document.getElementById('profileCta');
+
+    if (session) {
+      const name = displayNameFor(session);
+      authBtn.outerHTML = `<div class="auth-chip" id="authBtn" title="Zum Ausloggen klicken">
+        <span class="auth-avatar" id="authAvatar">${name.charAt(0).toUpperCase()}</span>${name}
+      </div>`;
+      const authAvatar = document.getElementById('authAvatar');
+      if (session.avatarUrl) authAvatar.style.backgroundImage = `url(${session.avatarUrl})`;
+      document.getElementById('authBtn').addEventListener('click', handleLogoutClick);
+
+      profileAvatar.textContent = session.avatarUrl ? '' : name.charAt(0).toUpperCase();
+      profileAvatar.style.backgroundImage = session.avatarUrl ? `url(${session.avatarUrl})` : '';
+      profileName.textContent = name;
+      profileHandle.textContent = `Profil-ID #${session.id} · eingeloggt`;
+      profileIntro.textContent = 'Dein Login ist aktiv. Season-Punkte, Streaks und Challenge-Historie werden hier eingeblendet, sobald die entsprechenden Tabellen live sind.';
+      profileSoon.textContent = 'Weitere Profil-Daten folgen in Kürze →';
+      profileCta.style.display = 'none';
+    } else {
+      profileAvatar.textContent = 'L';
+      profileAvatar.style.backgroundImage = '';
+      profileName.textContent = 'Lena M.';
+      profileHandle.textContent = '@lena.trainiert · Beispiel';
+      profileIntro.textContent = 'Bald bekommt jedes Mitglied ein eigenes Profil: Season-Punkte, Streaks, Badges und alle bisherigen Challenges auf einen Blick.';
+      profileSoon.textContent = 'Vollständiges Profil folgt in Kürze →';
+      profileCta.style.display = '';
+    }
+  }
+
+  function handleLogoutClick() {
+    localStorage.removeItem(SESSION_KEY);
+    renderAuthUI();
+    rebindAuthOpen();
+  }
+
+  function rebindAuthOpen() {
+    const authBtn = document.getElementById('authBtn');
+    if (!getSession()) {
+      authBtn.addEventListener('click', openLoginModal);
+    }
+  }
+
+  /* ---------- MODAL ---------- */
+  const overlay = document.getElementById('loginOverlay');
+  const loginForm = document.getElementById('loginForm');
+  const loginError = document.getElementById('loginError');
+  const loginSubmit = document.getElementById('loginSubmit');
+
+  function openLoginModal() {
+    overlay.hidden = false;
+    loginError.hidden = true;
+    document.getElementById('loginName').focus();
+  }
+  function closeLoginModal() { overlay.hidden = true; }
+
+  document.getElementById('loginClose').addEventListener('click', closeLoginModal);
+  overlay.addEventListener('click', (e) => { if (e.target === overlay) closeLoginModal(); });
+
+  document.getElementById('profileCta').addEventListener('click', () => {
+    if (!getSession()) openLoginModal();
+  });
+
+  loginForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    loginError.hidden = true;
+    const name = document.getElementById('loginName').value.trim();
+    const password = document.getElementById('loginPassword').value;
+    loginSubmit.disabled = true;
+    loginSubmit.textContent = 'Prüfe …';
+    try {
+      const rows = await sbFetch('/rest/v1/profiles?name=eq.' + encodeURIComponent(name) + '&select=*');
+      if (!rows || rows.length === 0) throw new Error('Kein Profil mit diesem Namen gefunden.');
+      const profile = rows[0];
+      const ok = dcodeIO.bcrypt.compareSync(password, profile.password_hash);
+      if (!ok) throw new Error('Passwort stimmt nicht.');
+      const session = {
+        id: profile.id,
+        name: profile.name,
+        discriminator: profile.discriminator,
+        displayName: profile.display_name,
+        avatarUrl: profile.avatar_url || null,
+      };
+      localStorage.setItem(SESSION_KEY, JSON.stringify(session));
+      closeLoginModal();
+      renderAuthUI();
+    } catch (err) {
+      loginError.textContent = err.message || 'Login fehlgeschlagen.';
+      loginError.hidden = false;
+    } finally {
+      loginSubmit.disabled = false;
+      loginSubmit.textContent = 'Einloggen';
+    }
+  });
+
+  renderAuthUI();
+  rebindAuthOpen();
+</script>
 <script>
   const burger = document.querySelector('.burger');
   const navLinks = document.querySelector('.nav-links');
