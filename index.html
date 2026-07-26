@@ -4,8 +4,8 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <script src="https://cdn.jsdelivr.net/npm/bcryptjs@2.4.3/dist/bcrypt.min.js"></script>
-<script src="./jf-data.js"></script>
-<script src="./support.js"></script>
+<script src="./jf-data.js?v=3"></script>
+<script src="./support.js?v=3"></script>
 </head>
 <body>
 <x-dc>
@@ -628,59 +628,80 @@ class Component extends DCLogic {
     this.boot(s);
   }
 
-  /* Alles, was ohne Anmeldung geht — damit die Seite auch als Gast etwas zeigt. */
-  async boot(s) {
-    if (!window.JF) { this.setState({ err: 'jf-data.js nicht geladen.' }); return; }
-    try {
-      await window.JF.loadProfiles();
-      const active = await window.JF.loadActiveChallenge();
-      this.setState({ active });
-
-      if (active && !active.decemberVote) {
-        const ranking = await window.JF.monthRanking(active.monthId, active.goal);
-        this.setState({ ranking });
-      }
-
-      const [exercises, codes, feedRows] = await Promise.all([
-        window.JF.allExercises().catch(function () { return []; }),
-        window.JF.knownCodes().catch(function () { return []; }),
-        window.JF.recentAchievements(6).catch(function () { return []; })
-      ]);
-      this.setState({ exercises, codes, feedRows });
-
-      if (s) await this.refresh(s, active);
-    } catch (err) {
-      this.setState({ err: err.message });
-    }
+  warn(what, err) {
+    console.warn('Joyforce/' + what + ':', (err && err.message) ? err.message : err);
   }
 
-  /* Alles Persönliche. */
+  /* Ruft eine Funktion aus jf-data.js auf, wenn es sie gibt. Fehlt sie — etwa
+   * weil eine ältere jf-data.js im Browser-Cache liegt — gibt es den Ersatzwert
+   * statt eines Absturzes, der den ganzen Rest des Ladens mitreißt. */
+  async opt(fn, fallback) {
+    const args = Array.prototype.slice.call(arguments, 2);
+    const f = window.JF && window.JF[fn];
+    if (typeof f !== 'function') {
+      this.warn(fn, 'fehlt in jf-data.js — vermutlich eine veraltete Datei im Cache');
+      return fallback;
+    }
+    try { return await f.apply(window.JF, args); }
+    catch (err) { this.warn(fn, err); return fallback; }
+  }
+
+  /* Alles, was ohne Anmeldung geht — damit die Seite auch als Gast etwas zeigt.
+   * Jeder Schritt steht für sich: ein Fehler darf die folgenden nicht verhindern. */
+  async boot(s) {
+    if (!window.JF) { this.setState({ err: 'jf-data.js wurde nicht geladen.' }); return; }
+
+    let active = null;
+    try {
+      await window.JF.loadProfiles();
+      active = await window.JF.loadActiveChallenge();
+      this.setState({ active, err: '' });
+    } catch (err) {
+      this.warn('Challenge', err);
+      this.setState({ err: err.message });   // blockiert das Eintragen, gehört ins UI
+    }
+
+    if (active && !active.decemberVote) {
+      this.setState({ ranking: await this.opt('monthRanking', [], active.monthId, active.goal) });
+    }
+
+    const rest = await Promise.all([
+      this.opt('allExercises', []),
+      this.opt('knownCodes', []),
+      this.opt('recentAchievements', [], 6)
+    ]);
+    this.setState({ exercises: rest[0], codes: rest[1], feedRows: rest[2] });
+
+    if (s) await this.refresh(s, active);
+  }
+
+  /* Alles Persönliche. Auch hier scheitert jeder Aufruf für sich allein. */
   async refresh(s, active) {
     active = active || this.state.active;
+    const live = active && !active.decemberVote;
     const year = new Date().getFullYear();
-    try {
-      const [entry, st, ach, days, history, season] = await Promise.all([
-        active && !active.decemberVote ? window.JF.myEntry(active.monthId, s.id) : Promise.resolve(null),
-        window.JF.streaks(s.id).catch(function () { return { current: 0, record: 0 }; }),
-        window.JF.achievements(s.id).catch(function () { return []; }),
-        window.JF.activeDays(s.id),
-        window.JF.profileHistory(s.id).catch(function () { return []; }),
-        window.JF.seasonRanking(year).catch(function () { return []; })
-      ]);
-      const mine = (season || []).filter(function (r) { return r.profile_id === s.id; })[0];
-      this.setState({
-        entry, days, ach, history,
-        streak: st.current, record: st.record,
-        seasonPts: mine ? mine.total_points : null,
-        hint: entry ? ('Dein Stand: ' + (entry.value1 || 0) + this.unit() + '. Neuer Wert wird addiert.')
-                    : 'Noch nichts eingetragen.'
-      });
-      if (active && !active.decemberVote) {
-        const ranking = await window.JF.monthRanking(active.monthId, active.goal);
-        this.setState({ ranking });
-      }
-    } catch (err) {
-      this.setState({ hint: 'Laden fehlgeschlagen — ' + err.message });
+
+    const res = await Promise.all([
+      live ? this.opt('myEntry', null, active.monthId, s.id) : Promise.resolve(null),
+      this.opt('streaks', { current: 0, record: 0 }, s.id),
+      this.opt('achievements', [], s.id),
+      this.opt('activeDays', [], s.id),
+      this.opt('profileHistory', [], s.id),
+      this.opt('seasonRanking', [], year)
+    ]);
+    const entry = res[0], st = res[1] || { current: 0, record: 0 };
+    const mine = (res[5] || []).filter(function (r) { return r.profile_id === s.id; })[0];
+
+    this.setState({
+      entry: entry, days: res[3] || [], ach: res[2] || [], history: res[4] || [],
+      streak: st.current || 0, record: st.record || 0,
+      seasonPts: mine ? mine.total_points : null,
+      hint: entry ? ('Dein Stand: ' + (entry.value1 || 0) + this.unit() + '. Neuer Wert wird addiert.')
+                  : 'Noch nichts eingetragen.'
+    });
+
+    if (live) {
+      this.setState({ ranking: await this.opt('monthRanking', [], active.monthId, active.goal) });
     }
   }
 
