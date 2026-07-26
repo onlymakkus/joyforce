@@ -38,6 +38,43 @@ input,button{font-family:inherit}
 input:focus-visible,button:focus-visible{outline:2px solid var(--orange);outline-offset:2px}
 @keyframes jfrise{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
 @keyframes jfdrift{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+
+/* ---------- Mobil ----------
+   Die Vorlage arbeitet mit Inline-Styles, deshalb braucht jede Regel hier
+   !important — sonst gewinnt das style-Attribut. */
+@media (max-width:900px){
+  .jf-hero,.jf-2col{grid-template-columns:1fr!important;gap:26px!important}
+  .jf-4col{grid-template-columns:repeat(2,1fr)!important}
+  .jf-podium{grid-template-columns:1fr!important;align-items:stretch!important;gap:14px!important}
+  .jf-pod1{order:-1}
+  .jf-olivecard{padding:26px!important}
+  .jf-h3{font-size:44px!important}
+}
+@media (max-width:640px){
+  /* nur die Sektionen — die <main>-Elemente behalten ihre 20px Rand,
+     sonst summieren sich beide auf der Startseite */
+  main section{padding-left:16px!important;padding-right:16px!important}
+  main h2{font-size:34px!important;line-height:.95!important}
+  .jf-head{flex-wrap:wrap!important;gap:10px!important;padding:10px 16px!important}
+  .jf-nav{order:3;flex:1 0 100%!important;padding-bottom:2px}
+  .jf-headright{margin-left:auto}
+  .jf-modal{padding:24px!important;border-radius:26px!important}
+  .jf-3col{grid-template-columns:1fr!important}
+  .jf-hero{padding-top:34px!important;gap:22px!important}
+  .jf-float{position:static!important;margin-top:14px;min-width:0!important}
+  .jf-herostats{gap:18px!important;margin-top:26px!important}
+  .jf-marquee{padding-left:0!important;padding-right:0!important}
+  .jf-heroart>div{aspect-ratio:16/10!important;border-radius:20px!important}
+  .jf-bars{gap:2px!important}
+  .jf-bars>div>div{font-size:9px!important}
+  .jf-rowbar{display:none!important}
+  .jf-profhead{grid-template-columns:1fr!important;justify-items:center;text-align:center;padding:24px!important}
+  .jf-cta{padding:36px 20px!important;border-radius:26px!important}
+  .jf-h3{font-size:38px!important}
+}
+@media (max-width:460px){
+  .jf-4col{grid-template-columns:1fr!important}
+}
 </style>
 </helmet>
 
@@ -45,7 +82,7 @@ input:focus-visible,button:focus-visible{outline:2px solid var(--orange);outline
 
 <sc-if value="{{ needsLogin }}">
 <div style="position:fixed;inset:0;z-index:90;background:color-mix(in oklab,var(--ink) 55%,transparent);display:grid;place-items:center;padding:24px;overflow:auto">
-  <div style="width:100%;max-width:440px;background:var(--surface);border:1px solid var(--line);border-radius:32px;padding:32px;box-shadow:var(--shadow);animation:jfrise .3s ease both">
+  <div class="jf-modal" style="width:100%;max-width:440px;background:var(--surface);border:1px solid var(--line);border-radius:32px;padding:32px;box-shadow:var(--shadow);animation:jfrise .3s ease both">
 
     <div style="display:flex;align-items:center;gap:10px;margin-bottom:20px">
       <div style="width:38px;height:38px;border-radius:50%;background:var(--olive-deep);color:#F5F0E6;display:grid;place-items:center;font-family:'Big Shoulders Display',sans-serif;font-weight:900;font-size:20px">JF</div>
@@ -108,17 +145,17 @@ input:focus-visible,button:focus-visible{outline:2px solid var(--orange);outline
 
 
 <header style="position:sticky;top:0;z-index:40;background:color-mix(in oklab,var(--bg) 88%,transparent);backdrop-filter:blur(14px);border-bottom:1px solid var(--line)">
-  <div style="max-width:1240px;margin:0 auto;padding:12px 20px;display:flex;align-items:center;gap:20px">
+  <div class="jf-head" style="max-width:1240px;margin:0 auto;padding:12px 20px;display:flex;align-items:center;gap:20px">
     <div style="display:flex;align-items:center;gap:10px;flex:0 0 auto">
       <div style="width:38px;height:38px;border-radius:50%;background:var(--olive-deep);color:#F5F0E6;display:grid;place-items:center;font-family:'Big Shoulders Display',sans-serif;font-weight:900;font-size:20px;letter-spacing:.02em;-webkit-mask-image:var(--stamp);mask-image:var(--stamp);mask-size:120px">JF</div>
       <div style="font-family:'Big Shoulders Display',sans-serif;font-weight:900;font-size:26px;letter-spacing:.01em;line-height:1;text-transform:uppercase">Joyforce</div>
     </div>
-    <nav style="display:flex;gap:4px;flex:1 1 auto;overflow-x:auto;scrollbar-width:none">
+    <nav class="jf-nav" style="display:flex;gap:4px;flex:1 1 auto;overflow-x:auto;scrollbar-width:none">
       <sc-for list="{{ nav }}" as="item" hint-placeholder-count="6">
         <button type="button" onClick="{{ item.go }}" style="border:0;background:{{ item.bg }};color:{{ item.fg }};padding:9px 15px;border-radius:999px;font-size:14px;font-weight:600;cursor:pointer;white-space:nowrap;transition:background .18s ease,color .18s ease" style-hover="background:var(--olive-soft)">{{ item.label }}</button>
       </sc-for>
     </nav>
-    <div style="display:flex;align-items:center;gap:10px;flex:0 0 auto">
+    <div class="jf-headright" style="display:flex;align-items:center;gap:10px;flex:0 0 auto">
       <button type="button" onClick="{{ toggleTheme }}" title="Theme wechseln" style="width:38px;height:38px;border-radius:50%;border:1px solid var(--line);background:var(--surface);color:var(--ink);cursor:pointer;font-size:14px" style-hover="border-color:var(--orange)">{{ themeIcon }}</button>
       <button type="button" onClick="{{ chipGo }}" style="display:flex;align-items:center;gap:10px;background:var(--surface);border:1px solid var(--line);border-radius:999px;padding:5px 14px 5px 5px;cursor:pointer;color:var(--ink);transition:border-color .18s ease" style-hover="border-color:var(--olive)">
         <div style="width:30px;height:30px;border-radius:50%;background:{{ myAv }};background-size:cover;background-position:center;color:#FFFDF7;display:grid;place-items:center;font-size:12px;font-weight:700">{{ chipInitials }}</div>
@@ -133,7 +170,7 @@ input:focus-visible,button:focus-visible{outline:2px solid var(--orange);outline
 
 <sc-if value="{{ isHome }}" hint-placeholder-val="{{ true }}">
 <main style="animation:jfrise .5s ease both">
-  <section style="max-width:1240px;margin:0 auto;padding:56px 20px 20px;display:grid;grid-template-columns:1.05fr .95fr;gap:48px;align-items:center">
+  <section class="jf-hero" style="max-width:1240px;margin:0 auto;padding:56px 20px 20px;display:grid;grid-template-columns:1.05fr .95fr;gap:48px;align-items:center">
     <div>
       <div style="display:inline-flex;align-items:center;gap:8px;background:var(--orange-soft);color:var(--orange);border-radius:999px;padding:7px 14px;font-family:'DM Mono',monospace;font-size:11px;letter-spacing:.12em;text-transform:uppercase">{{ chBadge }}</div>
       <h1 style="font-family:'Big Shoulders Display',sans-serif;font-weight:900;font-size:clamp(56px,7.2vw,116px);line-height:.86;letter-spacing:-.01em;text-transform:uppercase;margin:20px 0 0;color:var(--olive-deep);-webkit-mask-image:var(--stamp);mask-image:var(--stamp);mask-size:260px">Halt durch.<br />Gemeinsam.</h1>
@@ -142,17 +179,17 @@ input:focus-visible,button:focus-visible{outline:2px solid var(--orange);outline
         <button type="button" onClick="{{ goChallenge }}" style="background:var(--orange);color:#FFFDF7;border:0;border-radius:999px;padding:17px 30px;font-size:16px;font-weight:700;cursor:pointer;box-shadow:var(--shadow);transition:transform .18s ease" style-hover="transform:translateY(-2px)">{{ heroBtn }}</button>
         <button type="button" onClick="{{ goRanking }}" style="background:transparent;color:var(--olive-deep);border:1.5px solid var(--olive);border-radius:999px;padding:17px 30px;font-size:16px;font-weight:700;cursor:pointer;transition:background .18s ease" style-hover="background:var(--olive-soft)">Ranking ansehen</button>
       </div>
-      <div style="display:flex;gap:28px;margin-top:34px;font-family:'DM Mono',monospace;font-size:12px;letter-spacing:.08em;color:var(--muted);text-transform:uppercase;flex-wrap:wrap">
+      <div class="jf-herostats" style="display:flex;gap:28px;margin-top:34px;font-family:'DM Mono',monospace;font-size:12px;letter-spacing:.08em;color:var(--muted);text-transform:uppercase;flex-wrap:wrap">
         <div><span style="display:block;font-family:'Big Shoulders Display',sans-serif;font-size:34px;color:var(--ink);letter-spacing:0">{{ people }}</span>{{ peopleLabel }}</div>
         <div><span style="display:block;font-family:'Big Shoulders Display',sans-serif;font-size:34px;color:var(--ink);letter-spacing:0">{{ daysLeft }}</span>Tage übrig</div>
         <div><span style="display:block;font-family:'Big Shoulders Display',sans-serif;font-size:34px;color:var(--ink);letter-spacing:0">{{ myStand }}</span>{{ myStandLabel }}</div>
       </div>
     </div>
-    <div style="position:relative">
+    <div class="jf-heroart" style="position:relative">
       <div style="aspect-ratio:4/5;border-radius:28px;background:var(--ph);border:1px solid var(--line);display:grid;place-items:center;overflow:hidden">
         <div style="font-family:'DM Mono',monospace;font-size:12px;color:var(--muted);text-align:center;padding:0 24px;line-height:1.7">{{ heroPh }}</div>
       </div>
-      <div style="position:absolute;left:-24px;bottom:34px;background:var(--surface);border:1px solid var(--line);border-radius:20px;padding:18px 20px;box-shadow:var(--shadow);min-width:238px">
+      <div class="jf-float" style="position:absolute;left:-24px;bottom:34px;background:var(--surface);border:1px solid var(--line);border-radius:20px;padding:18px 20px;box-shadow:var(--shadow);min-width:238px">
         <div style="font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.12em;color:var(--muted);text-transform:uppercase">Heute eintragen</div>
         <div style="display:flex;align-items:baseline;gap:6px;margin-top:6px"><span style="font-family:'Big Shoulders Display',sans-serif;font-size:46px;font-weight:900;line-height:1;color:var(--olive-deep)">{{ latest }}</span><span style="font-size:14px;color:var(--muted)">{{ unitLong }}</span></div>
         <div style="height:8px;border-radius:99px;background:var(--surface2);margin-top:12px;overflow:hidden"><div style="height:100%;width:{{ pct }}%;background:var(--orange);border-radius:99px"></div></div>
@@ -161,7 +198,7 @@ input:focus-visible,button:focus-visible{outline:2px solid var(--orange);outline
     </div>
   </section>
 
-  <section style="margin-top:36px;background:var(--olive-deep);overflow:hidden;padding:18px 0">
+  <section class="jf-marquee" style="margin-top:36px;background:var(--olive-deep);overflow:hidden;padding:18px 0">
     <div style="display:flex;gap:44px;white-space:nowrap;width:max-content;animation:jfdrift 26s linear infinite;font-family:'Big Shoulders Display',sans-serif;font-weight:800;font-size:36px;letter-spacing:.06em;color:#F5F0E6;text-transform:uppercase;-webkit-mask-image:var(--stamp);mask-image:var(--stamp);mask-size:200px">
       <span>Stärke · Focus · Freiheit · Stärke · Focus · Freiheit · Stärke · Focus · Freiheit ·</span>
       <span>Stärke · Focus · Freiheit · Stärke · Focus · Freiheit · Stärke · Focus · Freiheit ·</span>
@@ -169,9 +206,9 @@ input:focus-visible,button:focus-visible{outline:2px solid var(--orange);outline
   </section>
 
   <section style="max-width:1240px;margin:0 auto;padding:72px 20px 0">
-    <div style="display:grid;grid-template-columns:.8fr 1.2fr;gap:44px;align-items:start">
+    <div class="jf-2col" style="display:grid;grid-template-columns:.8fr 1.2fr;gap:44px;align-items:start">
       <h2 style="font-family:'Big Shoulders Display',sans-serif;font-weight:900;font-size:52px;line-height:.92;text-transform:uppercase;margin:0;color:var(--olive-deep);-webkit-mask-image:var(--stamp);mask-image:var(--stamp);mask-size:180px">Was ist<br />Joyforce?</h2>
-      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:18px">
+      <div class="jf-3col" style="display:grid;grid-template-columns:repeat(3,1fr);gap:18px">
         <sc-for list="{{ pillars }}" as="p" hint-placeholder-count="3">
           <div style="background:var(--surface);border:1px solid var(--line);border-radius:22px;padding:22px;transition:transform .2s ease,border-color .2s ease" style-hover="transform:translateY(-4px);border-color:var(--olive)">
             <div style="width:34px;height:34px;border-radius:10px;background:var(--olive-soft)"></div>
@@ -183,10 +220,10 @@ input:focus-visible,button:focus-visible{outline:2px solid var(--orange);outline
     </div>
   </section>
 
-  <section style="max-width:1240px;margin:0 auto;padding:64px 20px 0;display:grid;grid-template-columns:1.15fr .85fr;gap:20px">
-    <div style="background:var(--olive);border-radius:28px;padding:34px;color:#FFFDF7;position:relative;overflow:hidden">
+  <section class="jf-2col" style="max-width:1240px;margin:0 auto;padding:64px 20px 0;display:grid;grid-template-columns:1.15fr .85fr;gap:20px">
+    <div class="jf-olivecard" style="background:var(--olive);border-radius:28px;padding:34px;color:#FFFDF7;position:relative;overflow:hidden">
       <div style="font-family:'DM Mono',monospace;font-size:11px;letter-spacing:.12em;text-transform:uppercase;opacity:.8">Aktuelle Challenge</div>
-      <div style="font-family:'Big Shoulders Display',sans-serif;font-weight:900;font-size:64px;line-height:.9;text-transform:uppercase;margin-top:8px">{{ chTitle }}</div>
+      <div class="jf-h3" style="font-family:'Big Shoulders Display',sans-serif;font-weight:900;font-size:64px;line-height:.9;text-transform:uppercase;margin-top:8px">{{ chTitle }}</div>
       <p style="max-width:42ch;line-height:1.6;opacity:.9;margin:16px 0 0">{{ chDesc }}</p>
       <div style="display:flex;gap:10px;margin-top:24px;flex-wrap:wrap">
         <sc-for list="{{ chChips }}" as="c" hint-placeholder-count="3">
@@ -201,7 +238,7 @@ input:focus-visible,button:focus-visible{outline:2px solid var(--orange);outline
           <div style="font-family:'Big Shoulders Display',sans-serif;font-weight:800;font-size:30px;text-transform:uppercase">Mein Fortschritt</div>
           <div style="font-family:'DM Mono',monospace;font-size:11px;color:var(--orange);letter-spacing:.08em">{{ trendLabel }}</div>
         </div>
-        <div style="display:flex;align-items:flex-end;gap:5px;height:96px;margin-top:20px">
+        <div class="jf-bars" style="display:flex;align-items:flex-end;gap:5px;height:96px;margin-top:20px">
           <sc-for list="{{ entries }}" as="e" hint-placeholder-count="14">
             <div title="{{ e.label }}" style="flex:1;height:{{ e.h }}%;background:{{ e.color }};border-radius:6px 6px 3px 3px;transition:opacity .2s ease" style-hover="opacity:.7"></div>
           </sc-for>
@@ -225,7 +262,7 @@ input:focus-visible,button:focus-visible{outline:2px solid var(--orange);outline
       <h2 style="font-family:'Big Shoulders Display',sans-serif;font-weight:900;font-size:52px;line-height:.9;text-transform:uppercase;margin:0;color:var(--olive-deep);-webkit-mask-image:var(--stamp);mask-image:var(--stamp);mask-size:180px">Aktuelles Ranking</h2>
       <button type="button" onClick="{{ goRanking }}" style="background:transparent;border:1.5px solid var(--olive);color:var(--olive-deep);border-radius:999px;padding:12px 22px;font-weight:700;cursor:pointer" style-hover="background:var(--olive-soft)">{{ rankBtn }}</button>
     </div>
-    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-top:26px">
+    <div class="jf-3col" style="display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-top:26px">
       <sc-for list="{{ top3 }}" as="r" hint-placeholder-count="3">
         <div style="background:{{ r.bg }};color:{{ r.fg }};border:1px solid var(--line);border-radius:24px;padding:24px;display:flex;gap:16px;align-items:center">
           <div style="font-family:'Big Shoulders Display',sans-serif;font-weight:900;font-size:56px;line-height:.8;opacity:.9">{{ r.rank }}</div>
@@ -239,7 +276,7 @@ input:focus-visible,button:focus-visible{outline:2px solid var(--orange);outline
     </div>
   </section>
 
-  <section style="max-width:1240px;margin:0 auto;padding:64px 20px 0;display:grid;grid-template-columns:1fr 1fr;gap:20px">
+  <section class="jf-2col" style="max-width:1240px;margin:0 auto;padding:64px 20px 0;display:grid;grid-template-columns:1fr 1fr;gap:20px">
     <div style="background:var(--surface);border:1px solid var(--line);border-radius:28px;padding:28px">
       <div style="font-family:'Big Shoulders Display',sans-serif;font-weight:800;font-size:32px;text-transform:uppercase">Zuletzt freigeschaltet</div>
       <div style="display:grid;gap:12px;margin-top:18px">
@@ -254,7 +291,7 @@ input:focus-visible,button:focus-visible{outline:2px solid var(--orange);outline
     </div>
     <div style="background:var(--surface);border:1px solid var(--line);border-radius:28px;padding:28px">
       <div style="font-family:'Big Shoulders Display',sans-serif;font-weight:800;font-size:32px;text-transform:uppercase">Erfolge &amp; Badges</div>
-      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:18px">
+      <div class="jf-3col" style="display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:18px">
         <sc-for list="{{ badges }}" as="b" hint-placeholder-count="6">
           <div style="border:1px solid var(--line);border-radius:18px;padding:16px;text-align:center;opacity:{{ b.op }};background:var(--bg)">
             <div style="width:44px;height:44px;border-radius:50%;margin:0 auto;background:{{ b.dot }}"></div>
@@ -268,7 +305,7 @@ input:focus-visible,button:focus-visible{outline:2px solid var(--orange);outline
 
   <section style="max-width:1240px;margin:0 auto;padding:64px 20px 0">
     <h2 style="font-family:'Big Shoulders Display',sans-serif;font-weight:900;font-size:52px;text-transform:uppercase;margin:0;color:var(--olive-deep);-webkit-mask-image:var(--stamp);mask-image:var(--stamp);mask-size:180px">Übungsbibliothek</h2>
-    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:18px;margin-top:24px">
+    <div class="jf-4col" style="display:grid;grid-template-columns:repeat(4,1fr);gap:18px;margin-top:24px">
       <sc-for list="{{ exercises }}" as="x" hint-placeholder-count="4">
         <div style="background:var(--surface);border:1px solid var(--line);border-radius:24px;overflow:hidden;transition:transform .2s ease" style-hover="transform:translateY(-4px)">
           <div style="aspect-ratio:4/3;background:var(--ph);display:grid;place-items:center"><span style="font-family:'DM Mono',monospace;font-size:11px;color:var(--muted)">{{ x.ph }}</span></div>
@@ -283,7 +320,7 @@ input:focus-visible,button:focus-visible{outline:2px solid var(--orange);outline
   </section>
 
   <section style="max-width:1240px;margin:64px auto 0;padding:0 20px">
-    <div style="background:var(--olive-deep);border-radius:32px;padding:56px 40px;text-align:center;color:#F5F0E6">
+    <div class="jf-cta" style="background:var(--olive-deep);border-radius:32px;padding:56px 40px;text-align:center;color:#F5F0E6">
       <div style="font-family:'Big Shoulders Display',sans-serif;font-weight:900;font-size:clamp(40px,5.4vw,78px);line-height:.9;text-transform:uppercase;-webkit-mask-image:var(--stamp);mask-image:var(--stamp);mask-size:220px">{{ ctaTitle }}</div>
       <p style="opacity:.85;max-width:48ch;margin:16px auto 0;line-height:1.6">{{ ctaText }}</p>
       <button type="button" onClick="{{ ctaGo }}" style="margin-top:26px;background:var(--orange);color:#FFFDF7;border:0;border-radius:999px;padding:17px 32px;font-weight:700;font-size:16px;cursor:pointer">{{ ctaBtn }}</button>
@@ -294,12 +331,12 @@ input:focus-visible,button:focus-visible{outline:2px solid var(--orange);outline
 
 <sc-if value="{{ isChallenge }}">
 <main style="max-width:1240px;margin:0 auto;padding:48px 20px 0;animation:jfrise .4s ease both">
-  <div style="display:grid;grid-template-columns:1.1fr .9fr;gap:20px;align-items:start">
+  <div class="jf-2col" style="display:grid;grid-template-columns:1.1fr .9fr;gap:20px;align-items:start">
     <div>
       <div style="font-family:'DM Mono',monospace;font-size:11px;letter-spacing:.12em;color:var(--orange);text-transform:uppercase">{{ chMeta }}</div>
       <h1 style="font-family:'Big Shoulders Display',sans-serif;font-weight:900;font-size:clamp(48px,6vw,86px);line-height:.88;text-transform:uppercase;margin:10px 0 0;color:var(--olive-deep);-webkit-mask-image:var(--stamp);mask-image:var(--stamp);mask-size:220px">{{ chTitle }}</h1>
       <p style="font-size:18px;line-height:1.6;color:var(--muted);max-width:52ch;margin-top:16px">{{ chDesc }}</p>
-      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:26px">
+      <div class="jf-3col" style="display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:26px">
         <sc-for list="{{ rules }}" as="r" hint-placeholder-count="3">
           <div style="background:var(--surface);border:1px solid var(--line);border-radius:20px;padding:18px">
             <div style="font-family:'DM Mono',monospace;font-size:10px;color:var(--orange);letter-spacing:.1em;text-transform:uppercase">{{ r.k }}</div>
@@ -333,7 +370,7 @@ input:focus-visible,button:focus-visible{outline:2px solid var(--orange);outline
       <div style="font-family:'Big Shoulders Display',sans-serif;font-weight:800;font-size:32px;text-transform:uppercase">Verlauf</div>
       <div style="font-family:'DM Mono',monospace;font-size:11px;color:var(--muted)">{{ historyMeta }}</div>
     </div>
-    <div style="display:flex;align-items:flex-end;gap:6px;height:180px;margin-top:22px">
+    <div class="jf-bars" style="display:flex;align-items:flex-end;gap:6px;height:180px;margin-top:22px">
       <sc-for list="{{ entries }}" as="e" hint-placeholder-count="14">
         <div style="flex:1;display:flex;flex-direction:column;justify-content:flex-end;align-items:center;gap:8px;height:100%">
           <div style="font-family:'DM Mono',monospace;font-size:10px;color:var(--muted)">{{ e.v }}</div>
@@ -344,7 +381,7 @@ input:focus-visible,button:focus-visible{outline:2px solid var(--orange);outline
     </div>
   </section>
 
-  <section style="margin-top:24px;display:grid;grid-template-columns:repeat(4,1fr);gap:18px;padding-bottom:8px">
+  <section class="jf-4col" style="margin-top:24px;display:grid;grid-template-columns:repeat(4,1fr);gap:18px;padding-bottom:8px">
     <sc-for list="{{ milestones }}" as="m" hint-placeholder-count="4">
       <div style="background:{{ m.bg }};color:{{ m.fg }};border:1px solid var(--line);border-radius:22px;padding:22px">
         <div style="font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.1em;text-transform:uppercase;opacity:.75">{{ m.state }}</div>
@@ -361,7 +398,7 @@ input:focus-visible,button:focus-visible{outline:2px solid var(--orange);outline
   <h1 style="font-family:'Big Shoulders Display',sans-serif;font-weight:900;font-size:clamp(48px,6vw,86px);line-height:.9;text-transform:uppercase;margin:0;color:var(--olive-deep);-webkit-mask-image:var(--stamp);mask-image:var(--stamp);mask-size:220px">Ranking</h1>
   <p style="color:var(--muted);font-size:17px;margin-top:10px">{{ rankIntro }}</p>
 
-  <div style="display:grid;grid-template-columns:1fr 1.25fr 1fr;gap:18px;align-items:end;margin-top:34px">
+  <div class="jf-podium" style="display:grid;grid-template-columns:1fr 1.25fr 1fr;gap:18px;align-items:end;margin-top:34px">
     <div style="background:var(--surface);border:1px solid var(--line);border-radius:26px;padding:24px;text-align:center">
       <div style="width:72px;height:72px;border-radius:50%;background:{{ p2av }};background-size:cover;background-position:center;border:1px solid var(--line);margin:0 auto"></div>
       <div style="font-weight:700;margin-top:12px">{{ p2n }}</div>
@@ -369,7 +406,7 @@ input:focus-visible,button:focus-visible{outline:2px solid var(--orange);outline
       <div style="font-family:'Big Shoulders Display',sans-serif;font-size:44px;line-height:1;margin-top:10px">{{ p2v }}</div>
       <div style="font-family:'Big Shoulders Display',sans-serif;font-size:22px;color:var(--muted)">{{ p2r }}</div>
     </div>
-    <div style="background:var(--olive-deep);color:#F5F0E6;border-radius:30px;padding:34px 24px;text-align:center;box-shadow:var(--shadow)">
+    <div class="jf-pod1" style="background:var(--olive-deep);color:#F5F0E6;border-radius:30px;padding:34px 24px;text-align:center;box-shadow:var(--shadow)">
       <div style="width:92px;height:92px;border-radius:50%;background:{{ p1av }};background-size:cover;background-position:center;margin:0 auto"></div>
       <div style="font-weight:700;font-size:19px;margin-top:14px">{{ p1n }}</div>
       <div style="font-family:'DM Mono',monospace;font-size:12px;opacity:.75">{{ p1c }}</div>
@@ -385,14 +422,14 @@ input:focus-visible,button:focus-visible{outline:2px solid var(--orange);outline
     </div>
   </div>
 
-  <div style="display:grid;grid-template-columns:1.35fr .65fr;gap:20px;margin-top:24px">
+  <div class="jf-2col" style="display:grid;grid-template-columns:1.35fr .65fr;gap:20px;margin-top:24px">
     <div style="background:var(--surface);border:1px solid var(--line);border-radius:28px;padding:12px">
       <sc-for list="{{ list }}" as="r" hint-placeholder-count="7">
         <div style="display:flex;align-items:center;gap:16px;padding:14px 16px;border-radius:20px;background:{{ r.bg }};transition:background .18s ease" style-hover="background:var(--bg)">
           <div style="font-family:'Big Shoulders Display',sans-serif;font-size:26px;width:40px;color:var(--muted)">{{ r.rank }}</div>
           <div style="width:42px;height:42px;border-radius:50%;background:{{ r.av }};background-size:cover;background-position:center;flex:0 0 auto"></div>
           <div style="flex:1"><div style="font-weight:700;font-size:15.5px">{{ r.name }}</div><div style="font-family:'DM Mono',monospace;font-size:11px;color:var(--muted)">{{ r.city }}</div></div>
-          <div style="width:120px;height:8px;border-radius:99px;background:var(--surface2);overflow:hidden"><div style="height:100%;width:{{ r.w }}%;background:{{ r.bar }}"></div></div>
+          <div class="jf-rowbar" style="width:120px;height:8px;border-radius:99px;background:var(--surface2);overflow:hidden"><div style="height:100%;width:{{ r.w }}%;background:{{ r.bar }}"></div></div>
           <div style="font-family:'Big Shoulders Display',sans-serif;font-size:26px;width:70px;text-align:right">{{ r.score }}</div>
         </div>
       </sc-for>
@@ -423,7 +460,7 @@ input:focus-visible,button:focus-visible{outline:2px solid var(--orange);outline
 <main style="max-width:1240px;margin:0 auto;padding:48px 20px 0;animation:jfrise .4s ease both">
   <h1 style="font-family:'Big Shoulders Display',sans-serif;font-weight:900;font-size:clamp(48px,6vw,86px);line-height:.9;text-transform:uppercase;margin:0;color:var(--olive-deep);-webkit-mask-image:var(--stamp);mask-image:var(--stamp);mask-size:220px">Technik &amp; Wissen</h1>
   <p style="color:var(--muted);font-size:17px;margin-top:10px;max-width:56ch">{{ knowIntro }}</p>
-  <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:18px;margin-top:28px">
+  <div class="jf-4col" style="display:grid;grid-template-columns:repeat(4,1fr);gap:18px;margin-top:28px">
     <sc-for list="{{ exercises }}" as="x" hint-placeholder-count="4">
       <div style="background:var(--surface);border:1px solid var(--line);border-radius:24px;overflow:hidden;transition:transform .2s ease" style-hover="transform:translateY(-4px)">
         <div style="aspect-ratio:4/3;background:var(--ph);display:grid;place-items:center"><span style="font-family:'DM Mono',monospace;font-size:11px;color:var(--muted)">{{ x.ph }}</span></div>
@@ -435,7 +472,7 @@ input:focus-visible,button:focus-visible{outline:2px solid var(--orange);outline
       </div>
     </sc-for>
   </div>
-  <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-top:24px">
+  <div class="jf-2col" style="display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-top:24px">
     <div style="background:var(--olive);color:#FFFDF7;border-radius:28px;padding:30px">
       <div style="font-family:'Big Shoulders Display',sans-serif;font-weight:900;font-size:38px;text-transform:uppercase">{{ tipsTitle }}</div>
       <div style="display:grid;gap:14px;margin-top:18px">
@@ -454,10 +491,10 @@ input:focus-visible,button:focus-visible{outline:2px solid var(--orange);outline
 
 <sc-if value="{{ isProfile }}">
 <main style="max-width:1240px;margin:0 auto;padding:48px 20px 0;animation:jfrise .4s ease both">
-  <div style="background:var(--surface);border:1px solid var(--line);border-radius:32px;padding:32px;display:grid;grid-template-columns:auto 1fr auto;gap:26px;align-items:center">
+  <div class="jf-profhead" style="background:var(--surface);border:1px solid var(--line);border-radius:32px;padding:32px;display:grid;grid-template-columns:auto 1fr auto;gap:26px;align-items:center">
     <div style="width:104px;height:104px;border-radius:50%;background:var(--olive);color:#FFFDF7;display:grid;place-items:center;font-family:'Big Shoulders Display',sans-serif;font-size:40px;font-weight:900">{{ initials }}</div>
     <div>
-      <div style="font-family:'Big Shoulders Display',sans-serif;font-weight:900;font-size:52px;line-height:.95;text-transform:uppercase">{{ userName }}</div>
+      <div class="jf-h3" style="font-family:'Big Shoulders Display',sans-serif;font-weight:900;font-size:52px;line-height:.95;text-transform:uppercase">{{ userName }}</div>
       <div style="font-family:'DM Mono',monospace;font-size:12px;color:var(--muted);letter-spacing:.06em;margin-top:4px">{{ profileMeta }}</div>
       <div style="display:flex;gap:10px;margin-top:14px;flex-wrap:wrap">
         <div style="background:var(--orange-soft);color:var(--orange);border-radius:999px;padding:7px 14px;font-size:13px;font-weight:700">{{ streak }} Tage Streak</div>
@@ -468,7 +505,7 @@ input:focus-visible,button:focus-visible{outline:2px solid var(--orange);outline
     <div style="display:grid;gap:10px;justify-items:stretch"><button type="button" onClick="{{ goChallenge }}" style="background:var(--orange);color:#FFFDF7;border:0;border-radius:999px;padding:16px 28px;font-weight:700;font-size:15px;cursor:pointer">Heute eintragen</button><button type="button" onClick="{{ doLogout }}" style="background:transparent;color:var(--muted);border:1px solid var(--line);border-radius:999px;padding:12px 28px;font-weight:600;font-size:13.5px;cursor:pointer">Abmelden</button></div>
   </div>
 
-  <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:18px;margin-top:20px">
+  <div class="jf-4col" style="display:grid;grid-template-columns:repeat(4,1fr);gap:18px;margin-top:20px">
     <sc-for list="{{ stats }}" as="s" hint-placeholder-count="4">
       <div style="background:var(--surface);border:1px solid var(--line);border-radius:24px;padding:24px">
         <div style="font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.1em;color:var(--muted);text-transform:uppercase">{{ s.k }}</div>
@@ -477,10 +514,10 @@ input:focus-visible,button:focus-visible{outline:2px solid var(--orange);outline
     </sc-for>
   </div>
 
-  <div style="display:grid;grid-template-columns:1.3fr .7fr;gap:20px;margin-top:20px">
+  <div class="jf-2col" style="display:grid;grid-template-columns:1.3fr .7fr;gap:20px;margin-top:20px">
     <div style="background:var(--surface);border:1px solid var(--line);border-radius:28px;padding:28px">
       <div style="font-family:'Big Shoulders Display',sans-serif;font-weight:800;font-size:32px;text-transform:uppercase">{{ historyTitle }}</div>
-      <div style="display:flex;align-items:flex-end;gap:8px;height:150px;margin-top:20px">
+      <div class="jf-bars" style="display:flex;align-items:flex-end;gap:8px;height:150px;margin-top:20px">
         <sc-for list="{{ seasonBars }}" as="e" hint-placeholder-count="7">
           <div title="{{ e.label }}" style="flex:1;display:flex;flex-direction:column;justify-content:flex-end;align-items:center;gap:6px;height:100%">
             <div style="font-family:'DM Mono',monospace;font-size:10px;color:var(--muted)">{{ e.v }}</div>
