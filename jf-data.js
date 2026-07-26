@@ -67,6 +67,84 @@
     return s;
   }
 
+  /* ---------- Registrierung ----------
+   * Eins zu eins portiert aus profile.html. Nicht "sinngemäß" nachgebaut:
+   * dieselbe Discriminator-Vergabe, dieselbe bcrypt-Kostenstufe (10),
+   * derselbe Recovery-Code, dieselbe Absicherung gegen Doppelprofile.
+   */
+
+  function generateRecoveryCode() {
+    var chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789'; // ohne verwechselbare Zeichen (O/0, I/1)
+    var code = '';
+    for (var i = 0; i < 12; i++) {
+      if (i > 0 && i % 4 === 0) code += '-';
+      code += chars[Math.floor(Math.random() * chars.length)];
+    }
+    return code;
+  }
+
+  async function generateUniqueDiscriminator(name) {
+    for (var attempt = 0; attempt < 20; attempt++) {
+      var code = String(Math.floor(1000 + Math.random() * 9000));
+      var taken = await sbFetch('/rest/v1/profiles?name=eq.' + encodeURIComponent(name) +
+        '&discriminator=eq.' + code + '&select=id');
+      if (!taken || taken.length === 0) return code;
+    }
+    throw new Error('Konnte keinen freien Discriminator finden.');
+  }
+
+  async function register(name, displayNameInput, password) {
+    name = (name || '').trim();
+    var displayName = (displayNameInput || '').trim() || name;
+    if (!name) throw new Error('Bitte einen Namen eingeben.');
+    if (!password || password.length < 6) throw new Error('Passwort braucht mindestens 6 Zeichen.');
+
+    var bcrypt = (window.dcodeIO && window.dcodeIO.bcrypt) || window.bcrypt;
+    if (!bcrypt) throw new Error('bcrypt nicht geladen.');
+
+    // Name schon vergeben? Dann bekommt das neue Profil einen Discriminator.
+    var existingPlain = await sbFetch('/rest/v1/profiles?name=eq.' + encodeURIComponent(name) +
+      '&discriminator=is.null&select=id');
+    var discriminator = null, handle = null;
+    if (existingPlain && existingPlain.length > 0) {
+      discriminator = await generateUniqueDiscriminator(name);
+      handle = name + '#' + discriminator;
+    }
+
+    var hash = bcrypt.hashSync(password, 10);
+    await sbFetch('/rest/v1/profiles', {
+      method: 'POST', prefer: 'return=minimal',
+      body: JSON.stringify({ name: name, discriminator: discriminator, display_name: displayName, password_hash: hash })
+    });
+
+    var filter = discriminator
+      ? 'name=eq.' + encodeURIComponent(name) + '&discriminator=eq.' + discriminator
+      : 'name=eq.' + encodeURIComponent(name) + '&discriminator=is.null';
+    var created = await sbFetch('/rest/v1/profiles?' + filter + '&select=id,name,discriminator,display_name,created_at');
+
+    // Ohne diese Prüfung knallt created[0] als TypeError — NACHDEM das Profil
+    // schon angelegt wurde. Der Nutzer sieht einen Fehler, registriert sich
+    // nochmal und hat plötzlich zwei Profile.
+    if (!created || !created.length) {
+      throw new Error('Profil wurde angelegt, konnte aber nicht geladen werden — bitte anmelden statt neu registrieren.');
+    }
+    var p = created[0];
+
+    var recoveryCode = generateRecoveryCode();
+    await sbFetch('/rest/v1/profiles?id=eq.' + p.id, {
+      method: 'PATCH', prefer: 'return=minimal',
+      body: JSON.stringify({ recovery_code_hash: bcrypt.hashSync(recoveryCode, 10) })
+    });
+
+    // Kein avatarUrl — es gibt noch keins. Wie in profile.html.
+    var s = {
+      id: p.id, name: p.name, discriminator: p.discriminator,
+      displayName: p.display_name || p.name
+    };
+    localStorage.setItem(SESSION_KEY, JSON.stringify(s));
+    return { session: s, recoveryCode: recoveryCode, handle: handle };
+  }
+
   /* ---------- Profile-Map (Avatare, Anzeigenamen) ---------- */
 
   var PROFILES = {};
@@ -262,13 +340,53 @@
     return await sbFetch('/rest/v1/exercises?select=*&order=id') || [];
   }
 
+  /* ---------- Aktivitätstage (daily_log) ---------- */
+
+  /* Die Spaltennamen von daily_log sind hier nicht fest verdrahtet: gesucht wird
+   * das erste Feld, das wie ein Datum aussieht. Schlägt der Zugriff fehl,
+   * kommt eine leere Liste zurück — der Streifen bleibt dann einfach leer,
+   * statt die ganze Seite mitzureißen.
+   */
+  async function activeDays(profileId) {
+    try {
+      var rows = await sbFetch('/rest/v1/daily_log?profile_id=eq.' + profileId + '&select=*&limit=400');
+      if (!rows || !rows.length) return [];
+      var key = null;
+      Object.keys(rows[0]).forEach(function (k) {
+        if (key || k === 'id' || k === 'profile_id') return;
+        var v = rows[0][k];
+        if (typeof v === 'string' && /^\d{4}-\d{2}-\d{2}/.test(v)) key = k;
+      });
+      if (!key) return [];
+      return rows.map(function (r) { return String(r[key]).slice(0, 10); });
+    } catch (e) { console.warn('daily_log:', e.message); return []; }
+  }
+
+  /* ---------- Erfolgs-Feed (alle Profile) ---------- */
+
+  async function recentAchievements(limit) {
+    return await sbFetch('/rest/v1/achievements?select=code,unlocked_at,profile_id' +
+      '&order=unlocked_at.desc&limit=' + (limit || 8)) || [];
+  }
+
+  /* Alle Codes, die in der Gruppe schon einmal vergeben wurden. Daraus baut das
+   * Frontend die Badge-Wand — so muss die Codeliste nicht doppelt gepflegt werden.
+   */
+  async function knownCodes() {
+    var rows = await sbFetch('/rest/v1/achievements?select=code&limit=1000') || [];
+    var seen = {}, out = [];
+    rows.forEach(function (r) { if (!seen[r.code]) { seen[r.code] = 1; out.push(r.code); } });
+    return out.sort();
+  }
+
   window.JF = {
     sbFetch: sbFetch,
-    session: session, login: login, logout: logout,
+    session: session, login: login, logout: logout, register: register,
     loadProfiles: loadProfiles, nameOf: nameOf, avatarOf: avatarOf,
     loadActiveChallenge: loadActiveChallenge,
     myEntry: myEntry, addProgress: addProgress, undoProgress: undoProgress,
     monthRanking: monthRanking, seasonRanking: seasonRanking, profileHistory: profileHistory,
-    streaks: streaks, achievements: achievements, allExercises: allExercises
+    streaks: streaks, achievements: achievements, allExercises: allExercises,
+    activeDays: activeDays, recentAchievements: recentAchievements, knownCodes: knownCodes
   };
 })();
