@@ -126,6 +126,13 @@ input:focus-visible,button:focus-visible{outline:2px solid var(--orange);outline
       <button type="button" onClick="{{ closeLogin }}" style="width:100%;margin-top:14px;background:transparent;border:1px solid var(--line);color:var(--muted);border-radius:16px;padding:13px;font-size:14px;font-weight:600;cursor:pointer" style-hover="border-color:var(--olive);color:var(--ink)">Erstmal nur umsehen</button>
     </sc-if>
 
+    <sc-if value="{{ isWipNote }}">
+      <div style="font-family:'Big Shoulders Display',sans-serif;font-weight:900;font-size:42px;line-height:.95;text-transform:uppercase">Noch nicht so weit</div>
+      <div style="font-size:14.5px;color:var(--muted);line-height:1.55;margin-top:10px">{{ wipLoginText }}</div>
+      <a href="https://onlymakkus.de/profile.html" target="_blank" rel="noopener" style="display:block;text-align:center;margin-top:20px;background:var(--orange);color:#FFFDF7;border-radius:16px;padding:16px;font-size:16px;font-weight:700;text-decoration:none">Auf onlymakkus.de registrieren</a>
+      <button type="button" onClick="{{ closeLogin }}" style="width:100%;margin-top:10px;background:transparent;border:1px solid var(--line);color:var(--muted);border-radius:16px;padding:13px;font-size:14px;font-weight:600;cursor:pointer" style-hover="border-color:var(--olive);color:var(--ink)">Erstmal nur umsehen</button>
+    </sc-if>
+
     <sc-if value="{{ isRecovery }}">
       <div style="font-family:'Big Shoulders Display',sans-serif;font-weight:900;font-size:42px;line-height:.95;text-transform:uppercase">Profil erstellt</div>
       <div style="font-size:14.5px;color:var(--muted);line-height:1.5;margin-top:8px">Das hier ist dein Wiederherstellungscode. Er wird <strong>genau einmal</strong> angezeigt — ohne ihn ist ein vergessenes Passwort nicht zurückzusetzen. Jetzt abschreiben oder abfotografieren.</div>
@@ -167,6 +174,16 @@ input:focus-visible,button:focus-visible{outline:2px solid var(--orange);outline
     </div>
   </div>
 </header>
+
+<sc-if value="{{ isWip }}">
+<div style="background:var(--orange);color:#FFFDF7;border-bottom:1px solid var(--line)">
+  <div style="max-width:1240px;margin:0 auto;padding:11px 20px;display:flex;gap:12px;align-items:center;justify-content:center;flex-wrap:wrap;text-align:center">
+    <span style="font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.16em;text-transform:uppercase;border:1px solid rgba(255,253,247,.55);border-radius:999px;padding:4px 10px;white-space:nowrap">Baustelle</span>
+    <span style="font-size:13.5px;line-height:1.5">{{ wipText }}</span>
+    <a href="https://onlymakkus.de/crossfit.html" style="color:#FFFDF7;font-weight:700;text-decoration:underline;font-size:13.5px;white-space:nowrap">Zur Challenge &rarr;</a>
+  </div>
+</div>
+</sc-if>
 
 <sc-if value="{{ isHome }}" hint-placeholder-val="{{ true }}">
 <main style="animation:jfrise .5s ease both">
@@ -552,6 +569,32 @@ input:focus-visible,button:focus-visible{outline:2px solid var(--orange);outline
 /* Joyforce — Oberfläche auf der Challenge-Datenbank von onlymakkus.
  * Alle Werte kommen aus window.JF (jf-data.js). Nichts ist mehr fest verdrahtet.
  */
+
+/* ---------------------------------------------------------------------------
+ * BAUSTELLEN-SCHALTER
+ * WIP_MODE = true  → Hinweisband oben, Anmelden/Registrieren zeigt statt der
+ *                    Formulare einen Verweis auf onlymakkus.de, und die
+ *                    Mitmach-Knöpfe führen auf die CrossFit-Seite dort.
+ * WIP_MODE = false → alles wieder normal. Es wird nichts entfernt, nur
+ *                    umgeleitet — die komplette Anmelde- und Eintrage-Logik
+ *                    bleibt im Code und funktioniert sofort wieder.
+ *
+ * Zum Testen trotz Baustelle: ?live=1 an die URL hängen.
+ * Wer schon angemeldet ist, kann weiterhin eintragen — das ist Absicht, damit
+ * du testen kannst, während Besucher nichts anfassen können.
+ * ------------------------------------------------------------------------- */
+const WIP_MODE = true;
+const OM_CROSSFIT = 'https://onlymakkus.de/crossfit.html';
+
+function wipActive() {
+  if (!WIP_MODE) return false;
+  try { if (/[?&]live=1/.test(window.location.search)) return false; } catch (e) {}
+  return true;
+}
+
+function goOM(url) {
+  try { window.location.href = url; } catch (e) {}
+}
 const MONTHS = ['Januar','Februar','März','April','Mai','Juni',
                 'Juli','August','September','Oktober','November','Dezember'];
 
@@ -809,6 +852,7 @@ class Component extends DCLogic {
   renderVals() {
     const S = this.state;
     const me = S.session;
+    const wip = wipActive();
     // Ohne Anmeldung gibt es keine Profilseite — dann zurück auf Start.
     const view = (S.view === 'profile' && !me) ? 'home' : S.view;
     const a = S.active;
@@ -966,11 +1010,15 @@ class Component extends DCLogic {
 
     return {
       // Anmeldung
+      isWip: wip,
+      wipText: 'Joyforce ist noch im Aufbau. Was du hier siehst, ist eine Vorschau — die laufende Challenge läuft auf onlymakkus.de.',
+      wipLoginText: 'Anmelden und Registrieren gibt es hier noch nicht. Profile werden aktuell auf onlymakkus.de angelegt — sobald Joyforce fertig ist, meldest du dich hier mit denselben Daten an.',
+      isWipNote: wip && !S.recovery,
       needsLogin: S.loginOpen || !!S.recovery,
       openLogin: this.openLogin,
       closeLogin: this.closeLogin,
       isRecovery: !!S.recovery,
-      isAuthForm: !S.recovery,
+      isAuthForm: !S.recovery && !wip,
       isLogin: !S.recovery && S.authTab === 'login',
       isRegister: !S.recovery && S.authTab === 'register',
       tabLogin: () => this.setState({ authTab: 'login', loginErr: '' }),
@@ -1044,7 +1092,7 @@ class Component extends DCLogic {
           id: 'login', label: 'Anmelden',
           go: this.openLogin, bg: 'transparent', fg: 'var(--orange)'
         }]),
-      goChallenge: () => this.set('challenge'),
+      goChallenge: wip ? (() => goOM(OM_CROSSFIT)) : (() => this.set('challenge')),
       goRanking: () => this.set('ranking'),
       goProfile: () => this.set('profile'),
 
@@ -1066,12 +1114,14 @@ class Component extends DCLogic {
       todayText: me
         ? 'Ein Wert reicht, um den Tag zu zählen. Der Streak läuft über daily_log.'
         : 'Anmelden, Wert eintragen, fertig. Es zählt jeder Tag einzeln.',
-      heroBtn: me ? 'Challenge starten' : 'Challenge ansehen',
-      ctaBtn: me ? 'Challenge starten' : 'Anmelden und mitmachen',
-      ctaGo: me ? (() => this.set('challenge')) : this.openLogin,
+      heroBtn: wip ? 'Zur Challenge auf onlymakkus' : (me ? 'Challenge starten' : 'Challenge ansehen'),
+      ctaBtn: wip ? 'Zur Challenge auf onlymakkus' : (me ? 'Challenge starten' : 'Anmelden und mitmachen'),
+      ctaGo: wip ? (() => goOM(OM_CROSSFIT)) : (me ? (() => this.set('challenge')) : this.openLogin),
       rankBtn: 'Alle ' + rk.length + ' ansehen',
-      ctaTitle: me ? 'Trag deine Zahl ein.' : 'Mach mit.',
-      ctaText: me
+      ctaTitle: wip ? 'Noch im Aufbau.' : (me ? 'Trag deine Zahl ein.' : 'Mach mit.'),
+      ctaText: wip
+        ? 'Joyforce ist eine Vorschau. Die Challenge selbst läuft weiter auf onlymakkus.de — dort eintragen, hier zuschauen, wie es wächst.'
+        : me
         ? 'Der Rest passiert von allein: der Streak wächst, das Ranking sortiert sich neu, die Erfolge kommen von selbst.'
         : 'Mit demselben Profil wie auf onlymakkus.de. Anmelden, Wert eintragen — der Rest passiert von allein.',
 
@@ -1086,11 +1136,13 @@ class Component extends DCLogic {
       pct, pctDeg: Math.round(pct * 3.6) + 'deg',
       val: S.val,
       saveHint: S.err ? ('Fehler: ' + S.err)
-        : (me ? S.hint : 'Nur zum Ansehen — zum Eintragen anmelden.'),
+        : (me ? S.hint
+              : (wip ? 'Die Seite ist noch im Aufbau — eingetragen wird bis auf Weiteres auf onlymakkus.de.'
+                     : 'Nur zum Ansehen — zum Eintragen anmelden.')),
       onInput: e => this.setState({ val: e.target.value }),
       submit: this.submit,
       inputHint: !me
-        ? 'Zum Eintragen anmelden.'
+        ? (wip ? 'Eintragen läuft bis auf Weiteres über onlymakkus.de.' : 'Zum Eintragen anmelden.')
         : (a && !a.decemberVote
             ? ('Wert dazurechnen' + (unit ? ' (' + unit + ')' : ''))
             : 'Diesen Monat gibt es nichts einzutragen.'),
