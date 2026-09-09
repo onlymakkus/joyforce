@@ -501,6 +501,31 @@ button:focus-visible {
 }
 .contact-link:hover { border-color: currentColor; }
 
+/* ---------------- Rechtliche Seiten ---------------- */
+
+.legal { padding-block: clamp(3rem, 7vw, 5.5rem); }
+.legal h1 { margin-bottom: 1.5rem; }
+.legal h2 {
+  font-size: 1.1rem;
+  margin-top: 2.25rem;
+}
+.legal p { max-width: 34rem; }
+
+.back-link {
+  text-decoration: none;
+  border-bottom: 1px solid transparent;
+  transition: border-color 160ms var(--ease-out);
+}
+.back-link:hover { border-color: currentColor; }
+
+.legal-source {
+  margin-top: 3rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--line-soft);
+  font-size: 0.82rem;
+  color: var(--ink-soft);
+}
+
 /* ---------------- Footer ---------------- */
 
 .site-footer {
